@@ -47,8 +47,23 @@ const NEXT_TOPIC = {
   9: "a short quiz and the conclusion",
 };
 
+// ---------------------------------------------------------------- design styles
+// node build.js            -> style 1 (indigo), the main deck
+// STYLE=light node build.js -> styles/Style_2_Light.pptx, and so on
+const STYLES = {
+  indigo: { n: 1, label: "Indigo", darkFrames: true, swap: false, head: "Montserrat", body: "Inter", titleColor: "text", coverBg: "dark", contentBg: "plain" },
+  light: { n: 2, label: "Light", darkFrames: false, swap: false, head: "Montserrat", body: "Inter", titleColor: "text", coverBg: "light", contentBg: "plain" },
+  dark: { n: 3, label: "Dark", darkFrames: false, swap: true, head: "Montserrat", body: "Inter", titleColor: "text", coverBg: "dark", contentBg: "grid" },
+  classic: { n: 4, label: "Classic", darkFrames: false, swap: false, head: "Cambria", body: "Calibri", titleColor: "indigo", coverBg: "light", contentBg: "plain" },
+};
+const STYLE_KEY = process.env.STYLE || "indigo";
+const ST = STYLES[STYLE_KEY];
+if (!ST) throw new Error("Unknown STYLE " + STYLE_KEY + ". Use one of: " + Object.keys(STYLES).join(", "));
+
 const ROOT = path.resolve(__dirname, "..");
-const OUT = path.join(ROOT, "Complex_Numbers_Conjugate_and_Absolute_Value.pptx");
+const OUT = STYLE_KEY === "indigo"
+  ? path.join(ROOT, "Complex_Numbers_Conjugate_and_Absolute_Value.pptx")
+  : path.join(ROOT, "styles", "Style_" + ST.n + "_" + ST.label + ".pptx");
 const LOGO = path.join(ROOT, "assets", "su-logo.png");
 
 // ---------------------------------------------------------------- design system
@@ -56,18 +71,30 @@ const HEX = {
   indigo: "17152F", purple: "7357FF", lavender: "F1EDFF", white: "FFFFFF",
   text: "20243A", gray: "E8E8F0", soft: "A897FF", muted: "6B6F86", deep: "2A2556", pale: "D9D1FF",
 };
+// The dark style swaps the theme: "text" becomes light and "background" becomes indigo,
+// so every scheme colour in the deck flips without touching the slide code.
+const DARK_HEX = {
+  text: "EEEAFB", white: "17152F", indigo: "0E0C1F", lavender: "25214A",
+  purple: "8C74FF", gray: "34305E", soft: "B4A7FF", muted: "A6A3C2", deep: "C9C0FF", pale: "4A3F9A",
+};
+// Classic style: navy academic palette instead of purple.
+const CLASSIC_HEX = {
+  text: "1B2333", white: "FFFFFF", indigo: "0F2142", lavender: "EEF2F8",
+  purple: "1F3A68", gray: "DCE2EC", soft: "8FA7CC", muted: "5F6B7D", deep: "2E4C80", pale: "C9D5E8",
+};
+const PH = ST.swap ? DARK_HEX : STYLE_KEY === "classic" ? CLASSIC_HEX : HEX; // the hex values actually in effect
 const THEME = {
-  name: "Complex Plane",
-  headFontFace: "Montserrat",
-  bodyFontFace: "Inter",
+  name: "Complex Plane " + ST.label,
+  headFontFace: ST.head,
+  bodyFontFace: ST.body,
   colors: {
-    dk1: HEX.text, lt1: HEX.white, dk2: HEX.indigo, lt2: HEX.lavender,
-    accent1: HEX.purple, accent2: HEX.gray, accent3: HEX.soft, accent4: HEX.muted,
-    accent5: HEX.deep, accent6: HEX.pale, hlink: HEX.purple, folHlink: HEX.soft,
+    dk1: PH.text, lt1: PH.white, dk2: PH.indigo, lt2: PH.lavender,
+    accent1: PH.purple, accent2: PH.gray, accent3: PH.soft, accent4: PH.muted,
+    accent5: PH.deep, accent6: PH.pale, hlink: PH.purple, folHlink: PH.soft,
   },
 };
 const MATH = "Cambria Math";
-const HEAD = "Montserrat";
+const HEAD = ST.head;
 
 const pres = new pptxgen();
 pres.layout = "LAYOUT_WIDE"; // 13.333 x 7.5 in
@@ -83,6 +110,12 @@ const C = {
   purple: S.accent1, gray: S.accent2, soft: S.accent3, muted: S.accent4, deep: S.accent5, pale: S.accent6,
 };
 const W = 13.333, H = 7.5, M = 0.6;
+// Colours for the "frame" slides (cover, introduction, key identity, conclusion).
+const D = ST.darkFrames
+  ? { fg: C.white, sub: C.pale, acc: C.soft, panel: C.deep }
+  : { fg: C.text, sub: C.muted, acc: C.purple, panel: C.lavender };
+// Text colour on solid purple / indigo fills.
+const ON = ST.swap ? C.text : C.white;
 
 // ---------------------------------------------------------------- helpers
 const bar = (s) => [...s].map((ch) => ch + "̅").join(""); // overline over a whole expression
@@ -160,6 +193,7 @@ function dot(slide, cx, cy, r, color, name = "Point") {
 let slideCount = 0;
 // Content slide: title + presenter name in the footer.
 function contentSlide(title, section, dark = false) {
+  dark = dark && ST.darkFrames;
   slideCount++;
   const slide = pres.addSlide({ masterName: dark ? "CONTENT_DARK" : "CONTENT", sectionTitle: section });
   slide.addText(title, { placeholder: "title" });
@@ -183,6 +217,7 @@ function bullets(slide, items, o) {
 
 // Harvard in-text citation at the bottom-left of a slide.
 function source(slide, cite, dark = false) {
+  dark = dark && ST.darkFrames;
   text(slide, "Source: " + cite, { x: M, y: 7.0, w: 6.4, h: 0.3, fontSize: 10, color: dark ? C.soft : C.muted, objectName: "Source citation" });
 }
 
@@ -202,24 +237,24 @@ async function svgToData(svg) {
 }
 
 // Flat indigo with a faint graph-paper grid and a pair of axes.
-function darkBgSvg(variant) {
+function darkBgSvg(variant, light = false) {
   const Wp = 1920, Hp = 1080;
   let grid = "";
-  for (let i = 0; i <= Wp; i += 60) grid += `<line x1="${i}" y1="0" x2="${i}" y2="${Hp}" stroke="#7357FF" stroke-opacity="0.08" stroke-width="1"/>`;
-  for (let j = 0; j <= Hp; j += 60) grid += `<line x1="0" y1="${j}" x2="${Wp}" y2="${j}" stroke="#7357FF" stroke-opacity="0.08" stroke-width="1"/>`;
+  for (let i = 0; i <= Wp; i += 60) grid += `<line x1="${i}" y1="0" x2="${i}" y2="${Hp}" stroke="#${PH.purple}" stroke-opacity="0.08" stroke-width="1"/>`;
+  for (let j = 0; j <= Hp; j += 60) grid += `<line x1="0" y1="${j}" x2="${Wp}" y2="${j}" stroke="#${PH.purple}" stroke-opacity="0.08" stroke-width="1"/>`;
   const cx = variant === "cover" ? 1440 : 1680, cy = variant === "cover" ? 540 : 300;
-  const axes = `<line x1="${cx - 700}" y1="${cy}" x2="${Wp}" y2="${cy}" stroke="#A897FF" stroke-opacity="0.25" stroke-width="2"/>
-    <line x1="${cx}" y1="0" x2="${cx}" y2="${Hp}" stroke="#A897FF" stroke-opacity="0.25" stroke-width="2"/>`;
+  const axes = variant === "grid" ? "" : `<line x1="${cx - 700}" y1="${cy}" x2="${Wp}" y2="${cy}" stroke="#${PH.soft}" stroke-opacity="0.25" stroke-width="2"/>
+    <line x1="${cx}" y1="0" x2="${cx}" y2="${Hp}" stroke="#${PH.soft}" stroke-opacity="0.25" stroke-width="2"/>`;
   const vx = cx + 240, vy = cy - 320;
   const vec = variant === "cover"
-    ? `<line x1="${cx}" y1="${cy}" x2="${vx}" y2="${vy}" stroke="#7357FF" stroke-width="5"/>
-       <line x1="${cx}" y1="${cy}" x2="${vx}" y2="${cy + 320}" stroke="#A897FF" stroke-opacity="0.45" stroke-width="3" stroke-dasharray="12 10"/>
-       <line x1="${vx}" y1="${vy}" x2="${vx}" y2="${cy + 320}" stroke="#A897FF" stroke-opacity="0.3" stroke-width="2" stroke-dasharray="6 8"/>
-       <circle cx="${vx}" cy="${vy}" r="13" fill="#7357FF"/>
-       <circle cx="${vx}" cy="${cy + 320}" r="10" fill="#A897FF" fill-opacity="0.7"/>`
+    ? `<line x1="${cx}" y1="${cy}" x2="${vx}" y2="${vy}" stroke="#${PH.purple}" stroke-width="5"/>
+       <line x1="${cx}" y1="${cy}" x2="${vx}" y2="${cy + 320}" stroke="#${PH.soft}" stroke-opacity="0.45" stroke-width="3" stroke-dasharray="12 10"/>
+       <line x1="${vx}" y1="${vy}" x2="${vx}" y2="${cy + 320}" stroke="#${PH.soft}" stroke-opacity="0.3" stroke-width="2" stroke-dasharray="6 8"/>
+       <circle cx="${vx}" cy="${vy}" r="13" fill="#${PH.purple}"/>
+       <circle cx="${vx}" cy="${cy + 320}" r="10" fill="#${PH.soft}" fill-opacity="0.7"/>`
     : "";
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${Wp}" height="${Hp}">
-  <rect width="${Wp}" height="${Hp}" fill="#17152F"/>${grid}${axes}${vec}</svg>`;
+  <rect width="${Wp}" height="${Hp}" fill="${light ? "#FFFFFF" : "#17152F"}"/>${grid}${axes}${vec}</svg>`;
 }
 
 // Electrical signal illustration: a rotating arrow and the sine wave it draws.
@@ -236,45 +271,46 @@ function signalSvg() {
   const peakX = x0 + (Math.PI / 2 - phi) * k;
   const refPeak = x0 + (Math.PI / 2) * k;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${Wp}" height="${Hp}" font-family="Inter, Arial">
-  <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7357FF"/></marker>
-  <marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#20243A"/></marker></defs>
-  <line x1="${cx - R - 20}" y1="${cy}" x2="${x1 + 20}" y2="${cy}" stroke="#20243A" stroke-width="2"/>
-  <line x1="${cx}" y1="${cy - R - 30}" x2="${cx}" y2="${cy + R + 30}" stroke="#20243A" stroke-width="2"/>
-  <line x1="${x0}" y1="${cy - R - 30}" x2="${x0}" y2="${cy + R + 30}" stroke="#C9C9D6" stroke-width="1.5"/>
-  <circle cx="${cx}" cy="${cy}" r="${R}" fill="#F1EDFF" stroke="#A897FF" stroke-width="2"/>
-  <path d="M${cx + 48},${cy} A48,48 0 0,0 ${(cx + 48 * Math.cos(phi)).toFixed(1)},${(cy - 48 * Math.sin(phi)).toFixed(1)}" fill="none" stroke="#20243A" stroke-width="2"/>
-  <text x="${cx + 58}" y="${cy - 14}" font-size="26" font-style="italic" fill="#20243A" font-family="Cambria, serif">φ</text>
-  <line x1="${cx}" y1="${cy}" x2="${tipX.toFixed(1)}" y2="${tipY.toFixed(1)}" stroke="#7357FF" stroke-width="6" marker-end="url(#a)"/>
-  <circle cx="${tipX.toFixed(1)}" cy="${tipY.toFixed(1)}" r="8" fill="#7357FF"/>
-  <line x1="${tipX.toFixed(1)}" y1="${tipY.toFixed(1)}" x2="${x0}" y2="${tipY.toFixed(1)}" stroke="#7357FF" stroke-width="2" stroke-dasharray="7 7"/>
-  <path d="${ref}" fill="none" stroke="#A897FF" stroke-width="3" stroke-dasharray="10 8"/>
-  <path d="${wave}" fill="none" stroke="#7357FF" stroke-width="5"/>
-  <line x1="${peakX.toFixed(1)}" y1="${cy}" x2="${peakX.toFixed(1)}" y2="${cy - R + 8}" stroke="#20243A" stroke-width="2" marker-end="url(#b)" marker-start="url(#b)"/>
-  <text x="${(peakX - 60).toFixed(1)}" y="${cy - R - 22}" font-size="26" font-weight="700" fill="#20243A">magnitude</text>
-  <line x1="${peakX.toFixed(1)}" y1="${cy + R - 10}" x2="${refPeak.toFixed(1)}" y2="${cy + R - 10}" stroke="#20243A" stroke-width="2" marker-end="url(#b)" marker-start="url(#b)"/>
-  <text x="${(peakX - 20).toFixed(1)}" y="${cy + R + 30}" font-size="26" font-weight="700" fill="#20243A">phase shift</text>
-  <text x="${cx - 70}" y="${cy + R + 70}" font-size="22" fill="#6B6F86">rotating arrow</text>
-  <text x="${x1 - 210}" y="${cy + R + 70}" font-size="22" fill="#6B6F86">signal over time</text>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#${PH.purple}"/></marker>
+  <marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#${PH.text}"/></marker></defs>
+  <line x1="${cx - R - 20}" y1="${cy}" x2="${x1 + 20}" y2="${cy}" stroke="#${PH.text}" stroke-width="2"/>
+  <line x1="${cx}" y1="${cy - R - 30}" x2="${cx}" y2="${cy + R + 30}" stroke="#${PH.text}" stroke-width="2"/>
+  <line x1="${x0}" y1="${cy - R - 30}" x2="${x0}" y2="${cy + R + 30}" stroke="#${PH.gray}" stroke-width="1.5"/>
+  <circle cx="${cx}" cy="${cy}" r="${R}" fill="#${PH.lavender}" stroke="#${PH.soft}" stroke-width="2"/>
+  <path d="M${cx + 48},${cy} A48,48 0 0,0 ${(cx + 48 * Math.cos(phi)).toFixed(1)},${(cy - 48 * Math.sin(phi)).toFixed(1)}" fill="none" stroke="#${PH.text}" stroke-width="2"/>
+  <text x="${cx + 58}" y="${cy - 14}" font-size="26" font-style="italic" fill="#${PH.text}" font-family="Cambria, serif">φ</text>
+  <line x1="${cx}" y1="${cy}" x2="${tipX.toFixed(1)}" y2="${tipY.toFixed(1)}" stroke="#${PH.purple}" stroke-width="6" marker-end="url(#a)"/>
+  <circle cx="${tipX.toFixed(1)}" cy="${tipY.toFixed(1)}" r="8" fill="#${PH.purple}"/>
+  <line x1="${tipX.toFixed(1)}" y1="${tipY.toFixed(1)}" x2="${x0}" y2="${tipY.toFixed(1)}" stroke="#${PH.purple}" stroke-width="2" stroke-dasharray="7 7"/>
+  <path d="${ref}" fill="none" stroke="#${PH.soft}" stroke-width="3" stroke-dasharray="10 8"/>
+  <path d="${wave}" fill="none" stroke="#${PH.purple}" stroke-width="5"/>
+  <line x1="${peakX.toFixed(1)}" y1="${cy}" x2="${peakX.toFixed(1)}" y2="${cy - R + 8}" stroke="#${PH.text}" stroke-width="2" marker-end="url(#b)" marker-start="url(#b)"/>
+  <text x="${(peakX - 60).toFixed(1)}" y="${cy - R - 22}" font-size="26" font-weight="700" fill="#${PH.text}">magnitude</text>
+  <line x1="${peakX.toFixed(1)}" y1="${cy + R - 10}" x2="${refPeak.toFixed(1)}" y2="${cy + R - 10}" stroke="#${PH.text}" stroke-width="2" marker-end="url(#b)" marker-start="url(#b)"/>
+  <text x="${(peakX - 20).toFixed(1)}" y="${cy + R + 30}" font-size="26" font-weight="700" fill="#${PH.text}">phase shift</text>
+  <text x="${cx - 70}" y="${cy + R + 70}" font-size="22" fill="#${PH.muted}">rotating arrow</text>
+  <text x="${x1 - 210}" y="${cy + R + 70}" font-size="22" fill="#${PH.muted}">signal over time</text>
 </svg>`;
 }
 
 // ---------------------------------------------------------------- build
 async function build() {
   const bgDark = await svgToData(darkBgSvg("plain"));
-  const bgCover = await svgToData(darkBgSvg("cover"));
+  const bgGrid = await svgToData(darkBgSvg("grid"));
+  const bgCover = await svgToData(darkBgSvg("cover", ST.coverBg === "light"));
   const signal = await svgToData(signalSvg());
   const hasLogo = fs.existsSync(LOGO);
 
   // ------------------------------------------------ layouts
   const titlePh = (dark) => ({
     placeholder: {
-      options: { name: "title", type: "title", x: M, y: 0.5, w: W - 2 * M, h: 0.9, fontFace: HEAD, fontSize: 32, bold: true, color: dark ? C.white : C.text, margin: 0, valign: "middle", align: "left" },
+      options: { name: "title", type: "title", x: M, y: 0.5, w: W - 2 * M, h: 0.9, fontFace: HEAD, fontSize: 32, bold: true, color: dark ? C.white : (ST.titleColor === "indigo" ? C.indigo : C.text), margin: 0, valign: "middle", align: "left" },
       text: "",
     },
   });
   pres.defineSlideMaster({
     title: "CONTENT",
-    background: { color: C.white },
+    background: ST.contentBg === "grid" ? { data: bgGrid } : { color: C.white },
     objects: [titlePh(false)],
     slideNumber: { x: W - M - 0.4, y: 7.0, w: 0.4, h: 0.3, fontSize: 10, color: C.muted, align: "right" },
   });
@@ -288,8 +324,8 @@ async function build() {
     title: "COVER",
     background: { data: bgCover },
     objects: [
-      { placeholder: { options: { name: "title", type: "title", x: M, y: 2.0, w: 9.6, h: 1.1, fontFace: HEAD, fontSize: 54, bold: true, color: C.white, margin: 0, valign: "middle", align: "left" }, text: "" } },
-      { placeholder: { options: { name: "subtitle", type: "body", x: M, y: 3.1, w: 8.6, h: 0.6, fontSize: 22, color: C.pale, margin: 0, valign: "top", align: "left" }, text: "" } },
+      { placeholder: { options: { name: "title", type: "title", x: M, y: 2.0, w: 9.6, h: 1.1, fontFace: HEAD, fontSize: 54, bold: true, color: ST.titleColor === "indigo" ? C.indigo : D.fg, margin: 0, valign: "middle", align: "left" }, text: "" } },
+      { placeholder: { options: { name: "subtitle", type: "body", x: M, y: 3.1, w: 8.6, h: 0.6, fontSize: 22, color: D.sub, margin: 0, valign: "top", align: "left" }, text: "" } },
     ],
   });
 
@@ -301,30 +337,30 @@ async function build() {
     if (hasLogo) {
       s.addImage({ path: LOGO, x: M, y: 0.5, w: 1.1, h: 1.1, sizing: { type: "contain", w: 1.1, h: 1.1 }, objectName: "University logo", altText: "Salahaddin University-Erbil logo" });
     } else {
-      s.addShape(pres.shapes.RECTANGLE, { x: M, y: 0.5, w: 1.1, h: 1.1, fill: { color: C.white, transparency: 92 }, line: { color: C.soft, width: 1, dashType: "dash" }, objectName: "University logo placeholder" });
-      text(s, "Insert official SU logo", { x: M + 0.08, y: 0.5, w: 0.94, h: 1.1, fontSize: 10, color: C.soft, align: "center", valign: "middle" });
+      s.addShape(pres.shapes.RECTANGLE, { x: M, y: 0.5, w: 1.1, h: 1.1, fill: { color: D.fg, transparency: 92 }, line: { color: D.acc, width: 1, dashType: "dash" }, objectName: "University logo placeholder" });
+      text(s, "Insert official SU logo", { x: M + 0.08, y: 0.5, w: 0.94, h: 1.1, fontSize: 10, color: D.acc, align: "center", valign: "middle" });
     }
-    text(s, INFO.university, { x: M + 1.35, y: 0.55, w: 7, h: 0.42, fontFace: HEAD, fontSize: 20, bold: true, color: C.white, valign: "middle" });
-    text(s, INFO.school + "  |  " + INFO.department, { x: M + 1.35, y: 1.0, w: 8, h: 0.32, fontSize: 14, color: C.pale, valign: "middle" });
-    text(s, "First-year mathematics", { x: M + 1.35, y: 1.3, w: 8, h: 0.3, fontSize: 14, color: C.soft, valign: "middle" });
+    text(s, INFO.university, { x: M + 1.35, y: 0.55, w: 7, h: 0.42, fontFace: HEAD, fontSize: 20, bold: true, color: D.fg, valign: "middle" });
+    text(s, INFO.school + "  |  " + INFO.department, { x: M + 1.35, y: 1.0, w: 8, h: 0.32, fontSize: 14, color: D.sub, valign: "middle" });
+    text(s, "First-year mathematics", { x: M + 1.35, y: 1.3, w: 8, h: 0.3, fontSize: 14, color: D.acc, valign: "middle" });
 
     s.addText(INFO.subject, { placeholder: "title" });
     s.addText(INFO.topic, { placeholder: "subtitle" });
 
     // nine presenters in a 3 x 3 grid
-    text(s, "Prepared by", { x: M, y: 4.15, w: 4, h: 0.3, fontSize: 13, bold: true, color: C.soft });
+    text(s, "Prepared by", { x: M, y: 4.15, w: 4, h: 0.3, fontSize: 13, bold: true, color: D.acc });
     INFO.students.forEach((name, i) => {
       const x = M + (i % 3) * 2.75, y = 4.5 + Math.floor(i / 3) * 0.4;
-      text(s, name, { x, y, w: 2.6, h: 0.34, fontSize: 14, color: C.white, valign: "middle" });
+      text(s, name, { x, y, w: 2.6, h: 0.34, fontSize: 14, color: D.fg, valign: "middle" });
     });
-    line(s, M, 5.85, M + 8.1, 5.85, { color: C.deep, width: 1, name: "Divider" });
+    line(s, M, 5.85, M + 8.1, 5.85, { color: D.panel, width: 1, name: "Divider" });
     text(s, [
-      { text: "Supervised by  ", options: { color: C.soft, bold: true } }, { text: INFO.lecturer, options: { color: C.white } },
-      { text: "        Academic year  ", options: { color: C.soft, bold: true } }, { text: INFO.year, options: { color: C.white } },
+      { text: "Supervised by  ", options: { color: D.acc, bold: true } }, { text: INFO.lecturer, options: { color: D.fg } },
+      { text: "        Academic year  ", options: { color: D.acc, bold: true } }, { text: INFO.year, options: { color: D.fg } },
     ], { x: M, y: 6.0, w: 8.5, h: 0.4, fontSize: 14, valign: "middle" });
 
-    math(s, "z = 3 + 4i", { x: 10.45, y: 0.82, w: 2.0, h: 0.45, fontSize: 22, italic: true, bold: true, color: C.white, align: "center" });
-    math(s, ZB + " = 3 " + MINUS + " 4i", { x: 10.45, y: 6.18, w: 2.0, h: 0.45, fontSize: 20, italic: true, color: C.soft, align: "center" });
+    math(s, "z = 3 + 4i", { x: 10.45, y: 0.82, w: 2.0, h: 0.45, fontSize: 22, italic: true, bold: true, color: D.fg, align: "center" });
+    math(s, ZB + " = 3 " + MINUS + " 4i", { x: 10.45, y: 6.18, w: 2.0, h: 0.45, fontSize: 20, italic: true, color: D.acc, align: "center" });
     s.addNotes(
       "Presenter: " + presenter(1) + "\n\n" +
       "Good morning everyone. We are nine students from the IT department and our topic today is complex numbers. " +
@@ -364,29 +400,29 @@ async function build() {
   // ================================================= SLIDE 3 — Why complex numbers?
   {
     const s = contentSlide("Why Complex Numbers?", "Introduction", true);
-    box(s, M, 1.85, 7.1, 1.3, { fill: C.deep, name: "Question box" });
+    box(s, M, 1.85, 7.1, 1.3, { fill: D.panel, name: "Question box" });
     text(s, "?", { x: M + 0.3, y: 1.85, w: 0.6, h: 1.3, fontFace: HEAD, fontSize: 54, bold: true, color: C.purple, valign: "middle" });
-    text(s, "Can we find the square root of a negative number?", { x: M + 1.1, y: 1.85, w: 5.8, h: 1.3, fontFace: HEAD, fontSize: 21, bold: true, color: C.white, valign: "middle" });
+    text(s, "Can we find the square root of a negative number?", { x: M + 1.1, y: 1.85, w: 5.8, h: 1.3, fontFace: HEAD, fontSize: 21, bold: true, color: D.fg, valign: "middle" });
 
-    text(s, "With real numbers, no.", { x: M, y: 3.45, w: 7, h: 0.4, fontSize: 18, bold: true, color: C.white });
+    text(s, "With real numbers, no.", { x: M, y: 3.45, w: 7, h: 0.4, fontSize: 18, bold: true, color: D.fg });
     ["2² = 4", "(" + MINUS + "2)² = 4", "0² = 0"].forEach((eq, i) => {
       const x = M + i * 2.4;
-      box(s, x, 3.95, 2.2, 0.85, { fill: C.deep, name: "Square example" });
-      math(s, eq, { x, y: 3.95, w: 2.2, h: 0.85, fontSize: 22, color: C.white, align: "center", valign: "middle" });
+      box(s, x, 3.95, 2.2, 0.85, { fill: D.panel, name: "Square example" });
+      math(s, eq, { x, y: 3.95, w: 2.2, h: 0.85, fontSize: 22, color: D.fg, align: "center", valign: "middle" });
     });
     bullets(s, [
       "The square of a real number is never negative.",
       "So the equation x² = " + MINUS + "1 has no real solution.",
       "We need a new kind of number to solve it.",
-    ], { x: M, y: 5.0, w: 7.1, h: 1.5, fontSize: 16, color: C.pale });
+    ], { x: M, y: 5.0, w: 7.1, h: 1.5, fontSize: 16, color: D.sub });
     source(s, "Abramson (2021a)", true);
 
     box(s, 8.35, 1.85, 4.38, 4.6, { fill: C.purple, name: "Imaginary unit box" });
-    text(s, "The imaginary unit", { x: 8.75, y: 2.15, w: 3.6, h: 0.4, fontSize: 17, bold: true, color: C.white });
-    text(s, "Mathematicians defined a new number i so that:", { x: 8.75, y: 2.6, w: 3.6, h: 0.7, fontSize: 15, color: C.pale });
-    math(s, "i² = " + MINUS + "1", { x: 8.75, y: 3.35, w: 3.6, h: 1.1, fontSize: 54, bold: true, color: C.white, align: "center", valign: "middle" });
-    math(s, "i = √(" + MINUS + "1)", { x: 8.75, y: 4.45, w: 3.6, h: 0.5, fontSize: 24, color: C.pale, align: "center" });
-    text(s, [{ text: "Now x² = " + MINUS + "1 has two answers:", options: { breakLine: true } }, { text: "x = i  and  x = " + MINUS + "i", options: { bold: true } }], { x: 8.75, y: 5.2, w: 3.6, h: 0.75, fontSize: 15, color: C.white, align: "center" });
+    text(s, "The imaginary unit", { x: 8.75, y: 2.15, w: 3.6, h: 0.4, fontSize: 17, bold: true, color: ON });
+    text(s, "Mathematicians defined a new number i so that:", { x: 8.75, y: 2.6, w: 3.6, h: 0.7, fontSize: 15, color: ON });
+    math(s, "i² = " + MINUS + "1", { x: 8.75, y: 3.35, w: 3.6, h: 1.1, fontSize: 54, bold: true, color: ON, align: "center", valign: "middle" });
+    math(s, "i = √(" + MINUS + "1)", { x: 8.75, y: 4.45, w: 3.6, h: 0.5, fontSize: 24, color: ON, align: "center" });
+    text(s, [{ text: "Now x² = " + MINUS + "1 has two answers:", options: { breakLine: true } }, { text: "x = i  and  x = " + MINUS + "i", options: { bold: true } }], { x: 8.75, y: 5.2, w: 3.6, h: 0.75, fontSize: 15, color: ON, align: "center" });
     notes(s,
       "So, can we take the square root of a negative number? With real numbers we can't. 2 squared is 4, minus 2 squared is also 4, and 0 squared is 0. A square is never negative, so x squared equals minus 1 has no real answer.\n\n" +
       "To solve this, mathematicians defined a new number, i, where i squared equals minus 1. With i, the equation x squared equals minus 1 has two answers: i and minus i."
@@ -448,7 +484,7 @@ async function build() {
     const widths = [3.5, 4.05, 4.18];
     ["Complex number  z", "Real part  Re(z)", "Imaginary part  Im(z)"].forEach((h, i) => {
       box(s, cols[i], 1.85, widths[i], 0.6, { fill: i === 0 ? C.indigo : C.purple, name: "Column header" });
-      text(s, h, { x: cols[i] + 0.25, y: 1.85, w: widths[i] - 0.5, h: 0.6, fontSize: 16, bold: true, color: C.white, valign: "middle" });
+      text(s, h, { x: cols[i] + 0.25, y: 1.85, w: widths[i] - 0.5, h: 0.6, fontSize: 16, bold: true, color: ON, valign: "middle" });
     });
     [["5 + 2i", "5", "2"], [MINUS + "3 + 7i", MINUS + "3", "7"]].forEach((r, j) => {
       const y = 2.6 + j * 1.2;
@@ -757,17 +793,17 @@ async function build() {
   {
     const s = contentSlide("The Important Connection", "Connecting the Ideas", true);
     box(s, M, 1.85, 5.6, 2.2, { fill: C.purple, name: "Identity" });
-    math(s, "z · " + ZB + " = |z|²", { x: M, y: 1.85, w: 5.6, h: 2.2, fontSize: 58, bold: true, italic: true, color: C.white, align: "center", valign: "middle" });
-    text(s, "Why is this useful?", { x: M, y: 4.4, w: 5.6, h: 0.4, fontSize: 18, bold: true, color: C.white });
+    math(s, "z · " + ZB + " = |z|²", { x: M, y: 1.85, w: 5.6, h: 2.2, fontSize: 58, bold: true, italic: true, color: ON, align: "center", valign: "middle" });
+    text(s, "Why is this useful?", { x: M, y: 4.4, w: 5.6, h: 0.4, fontSize: 18, bold: true, color: D.fg });
     text(s, [
       { text: "The result is always a real number (no i).", options: { bullet: true, breakLine: true } },
       { text: "It gives |z|² without a square root.", options: { bullet: true, breakLine: true } },
       { text: "We use it for division:", options: { bullet: true, breakLine: true } },
-      { text: "1 ÷ (3 + 4i) = (3 " + MINUS + " 4i) ÷ 25", options: { indentLevel: 1, fontFace: MATH, fontSize: 17, color: C.white } },
-    ], { x: M, y: 4.85, w: 5.6, h: 1.85, fontSize: 15, color: C.pale, paraSpaceAfter: 6 });
+      { text: "1 ÷ (3 + 4i) = (3 " + MINUS + " 4i) ÷ 25", options: { indentLevel: 1, fontFace: MATH, fontSize: 17, color: D.fg } },
+    ], { x: M, y: 4.85, w: 5.6, h: 1.85, fontSize: 15, color: D.sub, paraSpaceAfter: 6 });
 
-    box(s, 6.75, 1.85, 5.98, 4.85, { fill: C.deep, name: "Check" });
-    text(s, "Check with z = 3 + 4i", { x: 7.1, y: 2.05, w: 5.4, h: 0.4, fontSize: 16, bold: true, color: C.white });
+    box(s, 6.75, 1.85, 5.98, 4.85, { fill: D.panel, name: "Check" });
+    text(s, "Check with z = 3 + 4i", { x: 7.1, y: 2.05, w: 5.4, h: 0.4, fontSize: 16, bold: true, color: D.fg });
     const steps = [
       ["z · " + ZB, "= (3 + 4i)(3 " + MINUS + " 4i)", ""],
       ["", "= 9 " + MINUS + " 12i + 12i " + MINUS + " 16i²", ""],
@@ -777,12 +813,12 @@ async function build() {
     ];
     steps.forEach(([l, r, why], k) => {
       const y = 2.55 + k * 0.62;
-      math(s, l, { x: 7.1, y, w: 1.0, h: 0.55, fontSize: 20, italic: true, color: C.white, valign: "middle" });
-      math(s, r, { x: 8.1, y, w: 3.0, h: 0.55, fontSize: 20, italic: k < 4, bold: k === 4, color: k === 4 ? C.white : C.pale, valign: "middle" });
-      text(s, why, { x: 11.1, y, w: 1.55, h: 0.55, fontSize: 12, color: C.soft, valign: "middle" });
+      math(s, l, { x: 7.1, y, w: 1.0, h: 0.55, fontSize: 20, italic: true, color: D.fg, valign: "middle" });
+      math(s, r, { x: 8.1, y, w: 3.0, h: 0.55, fontSize: 20, italic: k < 4, bold: k === 4, color: k === 4 ? D.fg : D.sub, valign: "middle" });
+      text(s, why, { x: 11.1, y, w: 1.55, h: 0.55, fontSize: 12, color: D.acc, valign: "middle" });
     });
     source(s, "Brown and Churchill (2014); Stewart, Redlin and Watson (2016)", true);
-    math(s, "and  |z|² = 5² = 25.  Same result.", { x: 7.1, y: 5.85, w: 5.4, h: 0.55, fontSize: 19, bold: true, color: C.white, valign: "middle" });
+    math(s, "and  |z|² = 5² = 25.  Same result.", { x: 7.1, y: 5.85, w: 5.4, h: 0.55, fontSize: 19, bold: true, color: D.fg, valign: "middle" });
     notes(s,
       "This is where the two ideas meet: z times z bar equals the absolute value of z, squared.\n\n" +
       "Let's check with 3 plus 4i. We multiply 3 plus 4i by 3 minus 4i. The middle terms, minus 12i and plus 12i, cancel. Minus 16 i squared becomes plus 16, because i squared is minus 1. So we get 25. And the absolute value is 5, and 5 squared is also 25.\n\n" +
@@ -797,8 +833,8 @@ async function build() {
     const cx1 = x0 + labW + gap, cx2 = cx1 + colW + gap;
     [[cx1, "Complex conjugate", ZB], [cx2, "Absolute value", "|z|"]].forEach(([x, h, sym], i) => {
       box(s, x, 1.85, colW, 0.75, { fill: i === 0 ? C.purple : C.indigo, name: "Column header" });
-      text(s, h, { x: x + 0.3, y: 1.85, w: colW - 1.4, h: 0.75, fontFace: HEAD, fontSize: 18, bold: true, color: C.white, valign: "middle" });
-      math(s, sym, { x: x + colW - 1.2, y: 1.85, w: 0.95, h: 0.75, fontSize: 26, bold: true, italic: true, color: C.white, align: "right", valign: "middle" });
+      text(s, h, { x: x + 0.3, y: 1.85, w: colW - 1.4, h: 0.75, fontFace: HEAD, fontSize: 18, bold: true, color: ON, valign: "middle" });
+      math(s, sym, { x: x + colW - 1.2, y: 1.85, w: 0.95, h: 0.75, fontSize: 26, bold: true, italic: true, color: ON, align: "right", valign: "middle" });
     });
     const rows = [
       ["What it does", "Changes the sign of the imaginary part", "Gives the size of z"],
@@ -889,12 +925,12 @@ async function build() {
       "The absolute value is the distance from the origin: |z| = √(a² + b²).",
       "The identity z" + ZB + " = |z|² connects the two ideas.",
       "Complex numbers are used in mathematics, IT and engineering.",
-    ], { x: M, y: 1.55, w: 7.6, h: 2.6, fontSize: 15, color: C.white, paraSpaceAfter: 6 });
-    text(s, "Thank you", { x: 8.45, y: 1.6, w: 4.3, h: 1.0, fontFace: HEAD, fontSize: 44, bold: true, color: C.white, align: "right", valign: "middle" });
-    text(s, "Any questions?", { x: 8.45, y: 2.6, w: 4.3, h: 0.4, fontSize: 18, color: C.pale, align: "right" });
+    ], { x: M, y: 1.55, w: 7.6, h: 2.6, fontSize: 15, color: D.fg, paraSpaceAfter: 6 });
+    text(s, "Thank you", { x: 8.45, y: 1.6, w: 4.3, h: 1.0, fontFace: HEAD, fontSize: 44, bold: true, color: D.fg, align: "right", valign: "middle" });
+    text(s, "Any questions?", { x: 8.45, y: 2.6, w: 4.3, h: 0.4, fontSize: 18, color: D.sub, align: "right" });
 
-    line(s, M, 4.3, W - M, 4.3, { color: C.deep, width: 1, name: "Divider" });
-    text(s, "References (Harvard style)", { x: M, y: 4.38, w: 5, h: 0.3, fontSize: 12, bold: true, color: C.soft });
+    line(s, M, 4.3, W - M, 4.3, { color: D.panel, width: 1, name: "Divider" });
+    text(s, "References (Harvard style)", { x: M, y: 4.38, w: 5, h: 0.3, fontSize: 12, bold: true, color: D.acc });
     const ACC = "(Accessed: 3 November 2026).";
     const refs = [
       [["Abramson, J. (2021a) 'Section 3.1: Complex numbers', in ", 0], ["Precalculus 2e", 1], [". Houston, TX: OpenStax. Available at: https://openstax.org/books/precalculus-2e/pages/3-1-complex-numbers " + ACC, 0]],
@@ -906,7 +942,7 @@ async function build() {
     ];
     const runs = [];
     refs.forEach((r, i) => r.forEach(([t, it], k) => runs.push({ text: t, options: { italic: !!it, breakLine: k === r.length - 1 && i < refs.length - 1 } })));
-    text(s, runs, { x: M, y: 4.72, w: W - 2 * M, h: 2.2, fontSize: 10.5, color: C.pale, paraSpaceAfter: 3 });
+    text(s, runs, { x: M, y: 4.72, w: W - 2 * M, h: 2.2, fontSize: 10.5, color: D.sub, paraSpaceAfter: 3 });
     notes(s,
       "To sum up. A complex number has a real part and an imaginary part. The conjugate changes the sign of the imaginary part. The absolute value is the distance from the origin. And z times z bar equals the absolute value squared, which connects the two ideas. These ideas are used a lot in IT and engineering.\n\n" +
       "Our references are listed in Harvard style at the bottom. Thank you for listening. We're happy to answer any questions."
@@ -914,10 +950,11 @@ async function build() {
   }
 
   if (slideCount !== TOTAL_SLIDES) throw new Error("Expected " + TOTAL_SLIDES + " slides, built " + slideCount);
+  fs.mkdirSync(path.dirname(OUT), { recursive: true });
   await pres.writeFile({ fileName: OUT });
   await applyTheme(OUT, THEME);
   await addRevealAnimations(OUT, 18, answerNames);
-  console.log("Wrote " + OUT + (hasLogo ? " (with logo)" : " (logo placeholder: add assets/su-logo.png)"));
+  console.log("[" + ST.label + "] Wrote " + OUT + (hasLogo ? " (with logo)" : " (logo placeholder: add assets/su-logo.png)"));
 }
 
 // Click-to-reveal fade-in for the quiz answers (pptxgenjs has no animation API).

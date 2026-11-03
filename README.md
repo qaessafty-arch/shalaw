@@ -18,6 +18,19 @@ A 19-slide group presentation for first-year students (cover, outline and 17 con
 | `MATH_ACCURACY_CHECKLIST.md` | Each formula, example and quiz answer, checked. |
 | `source/` | The generator script (`build.js`). Rebuild the deck from here after you change names or the logo. |
 
+## Design styles
+
+There are 4 versions of the deck. The content, notes, quiz animation and references are identical in all of them; only the look is different. See `styles/STYLE_PREVIEW.png` to compare them side by side.
+
+| Style | File | Look |
+|---|---|---|
+| 1 Indigo | `Complex_Numbers_Conjugate_and_Absolute_Value.pptx` | White content slides with dark indigo cover, introduction, key identity and conclusion |
+| 2 Light | `styles/Style_2_Light.pptx` | Every slide white, purple accents |
+| 3 Dark | `styles/Style_3_Dark.pptx` | Every slide dark indigo, light text (good for dim rooms) |
+| 4 Classic | `styles/Style_4_Classic.pptx` | White slides, navy accents and serif titles (Cambria, Calibri), a traditional academic look |
+
+Each style also has a PDF next to it. Pick one and present from that file.
+
 ## Before presenting
 
 1. **Fill in your names.**
@@ -36,7 +49,9 @@ A 19-slide group presentation for first-year students (cover, outline and 17 con
 ```bash
 cd source
 npm install
-node build.js
+node build.js            # style 1 (main deck)
+npm run build:all        # all 4 styles
+STYLE=dark node build.js # one style: indigo, light, dark or classic
 ```
 
 This writes `Complex_Numbers_Conjugate_and_Absolute_Value.pptx` to the repository root.

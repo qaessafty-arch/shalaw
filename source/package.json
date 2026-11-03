@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "description": "Generator for the 18-slide Complex Numbers presentation (Salahaddin University-Erbil).",
-  "scripts": { "build": "node build.js" },
+  "scripts": {
+    "build": "node build.js",
+    "build:all": "node build.js && STYLE=light node build.js && STYLE=dark node build.js && STYLE=classic node build.js"
+  },
   "dependencies": {
     "pptxgenjs": "^3.12.0",
     "react": "^18.3.1",
