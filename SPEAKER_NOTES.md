@@ -1,195 +1,189 @@
-# Speaker Notes — All 18 Slides
+# Speaker Notes
 
-The same notes are embedded in the PowerPoint file (View → Notes Page, or Presenter View). They are short, natural, and easy to memorise.
+These are the same notes that are inside the PowerPoint file (View > Notes). There are 9 presenters and each one presents 2 slides.
 
-## Slide 1 — Cover: Complex Numbers
+## Slide 1: Cover
 
-Good morning everyone. My name is [STUDENT NAME], and today I am going to talk about complex numbers — specifically, two simple but very useful ideas: the complex conjugate and the absolute value.
+Presenter: [STUDENT 1]
 
-Don't worry if complex numbers sound scary. By the end of this presentation, you will see that both ideas are really just about flipping a sign and measuring a distance.
+Good morning everyone. We are nine students from the IT department and our topic today is complex numbers. We will mainly talk about two things, the complex conjugate and the absolute value. Each of us will present two slides.
 
-This presentation is for the Department of Information Technology (IT), School of Science, Salahaddin University-Erbil, supervised by [LECTURER NAME].
+I'm [STUDENT 1], and I'll start with why we need complex numbers in the first place.
 
-## Slide 2 — Why Complex Numbers?
+## Slide 2: Why Complex Numbers?
 
-Let's start with a simple question: can we find the square root of a negative number?
+Presenter: [STUDENT 1]
 
-If we only use real numbers, the answer is no. Look: 2 squared is 4, negative 2 squared is also 4, and 0 squared is 0. A real number squared is always positive or zero. So an equation like x squared equals negative 1 has no real solution.
+So, can we take the square root of a negative number? With real numbers we can't. 2 squared is 4, minus 2 squared is also 4, and 0 squared is 0. A square is never negative, so x squared equals minus 1 has no real answer.
 
-So mathematicians did something clever: they created a new number called i, the imaginary unit, with one special rule — i squared equals negative 1. With this single idea, x squared equals negative 1 suddenly has two answers: i and negative i.
+To solve this, mathematicians defined a new number, i, where i squared equals minus 1. With i, the equation x squared equals minus 1 has two answers: i and minus i.
 
-This one small step opens up a whole new number system — the complex numbers.
+Hand over: "Now [STUDENT 2] will explain what a complex number actually is."
 
-## Slide 3 — What Is a Complex Number?
+## Slide 3: What Is a Complex Number?
 
-So what exactly is a complex number?
+Presenter: [STUDENT 2]
 
-Every complex number can be written in the standard form z equals a plus b i. The letter a is the real part, b is the imaginary part, and i is the imaginary unit — the number whose square is negative 1.
+Thank you. A complex number is written as z equals a plus b i. Here a is the real part, b is the imaginary part, and i is the imaginary unit. So it's simply a real number plus an imaginary number.
 
-Here is an easy way to understand this: a complex number is just a real number and an imaginary number added together.
+For example, 3 plus 4i has real part 3 and imaginary part 4. And 2 minus 5i has real part 2 and imaginary part minus 5. The minus sign belongs to the imaginary part.
 
-For example, z equals 3 plus 4i has real part 3 and imaginary part 4. And z equals 2 minus 5i has real part 2 and imaginary part negative 5 — notice that the minus sign belongs to the imaginary part.
+## Slide 4: Understanding Real and Imaginary Parts
 
-## Slide 4 — Understanding Real and Imaginary Parts
+Presenter: [STUDENT 2]
 
-Now let's practise reading a complex number.
+Let's practise with two examples. In 5 plus 2i, the real part is 5 and the imaginary part is 2. In minus 3 plus 7i, the real part is minus 3 and the imaginary part is 7.
 
-Take z equals 5 plus 2i. The number on its own, 5, is the real part. The number in front of i, which is 2, is the imaginary part.
+One common mistake: people write the imaginary part as 2i. It's just 2, the number in front of i. And each part keeps its own sign.
 
-Next, z equals negative 3 plus 7i. The real part is negative 3 — we keep the sign — and the imaginary part is 7.
+Hand over: "Now [STUDENT 3] will explain the complex plane and the conjugate."
 
-Notice something interesting: the imaginary part is just the number in front of i. It does not include the i itself. So for 5 plus 2i, the imaginary part is 2, not 2i. This small detail avoids a lot of mistakes later.
+## Slide 5: The Complex Plane
 
-## Slide 5 — The Complex Plane
+Presenter: [STUDENT 3]
 
-We can also draw complex numbers. This picture is called the complex plane, or the Argand plane.
+Thank you. We can also draw complex numbers on a plane. The horizontal axis is the real axis and the vertical axis is the imaginary axis. This is called the complex plane or the Argand plane.
 
-The horizontal axis is the real axis — it shows the real part. The vertical axis is the imaginary axis — it shows the imaginary part.
+So a plus b i is just the point (a, b). For 3 plus 4i, we go 3 to the right and 4 up.
 
-So every complex number a plus b i becomes a single point, (a, b). To plot z equals 3 plus 4i, we simply go 3 steps to the right and 4 steps up. That's it — the point (3, 4).
+## Slide 6: What Is a Complex Conjugate?
 
-This picture will help us understand both the conjugate and the absolute value.
+Presenter: [STUDENT 3]
 
-## Slide 6 — What Is a Complex Conjugate?
+Now the first main idea, the conjugate. If z is a plus b i, then the conjugate, which we write as z with a bar and read as z bar, is a minus b i.
 
-Now we reach our first main idea: the complex conjugate.
+So we keep the real part and change the sign of the imaginary part. Nothing else changes. For example, 3 plus 4i becomes 3 minus 4i.
 
-If z equals a plus b i, then its conjugate — written z with a bar on top and read 'z bar' — equals a minus b i.
+Hand over: "Now [STUDENT 4] will explain how the conjugate looks on the graph and its rules."
 
-Here is an easy way to remember it: keep the real part, and flip the sign of the imaginary part. Nothing else changes — only one sign.
+## Slide 7: Visualizing the Complex Conjugate
 
-Let's try a simple example. If z equals 3 plus 4i, then z bar equals 3 minus 4i. The 3 stays exactly the same; only the plus in front of 4i becomes a minus.
+Presenter: [STUDENT 4]
 
-## Slide 7 — Visualizing the Complex Conjugate
+Thank you. Here is the conjugate on the graph. The point 3 plus 4i is four units above the real axis, and its conjugate 3 minus 4i is four units below it.
 
-Now let's look at the conjugate in the picture.
+The real part is the same, only the side changes. So the conjugate is a reflection across the real axis, like looking in a mirror. If you fold the paper along the real axis, the two points meet.
 
-Here is z equals 3 plus 4i, up at the point (3, 4). Its conjugate, 3 minus 4i, is down at (3, negative 4).
+## Slide 8: Basic Properties of Complex Conjugates
 
-Notice something interesting: both points are the same distance to the right, but one is 4 up and the other is 4 down. The real axis acts like a mirror.
+Presenter: [STUDENT 4]
 
-So geometrically, the conjugate is simply a reflection across the real axis. If you folded the page along the real axis, z would land exactly on z bar.
+The conjugate follows three simple rules. We won't prove them, we'll just check them with numbers.
 
-## Slide 8 — Basic Properties of Complex Conjugates
+First, if you take the conjugate twice, you get z back. 2 plus 3i goes to 2 minus 3i and then back to 2 plus 3i.
 
-Conjugates follow three simple rules. We don't need proofs today — just look at the examples.
+Second, the conjugate of a sum is the sum of the conjugates. In the example, both ways give 4 minus 3i.
 
-Rule one: the conjugate of the conjugate is z itself. Take 2 plus 3i. Its conjugate is 2 minus 3i. Conjugate again and we are back to 2 plus 3i. Flipping a sign twice brings you home.
+Third, the same works for multiplication. Both ways give minus 1 minus 3i.
 
-Rule two: the conjugate of a sum equals the sum of the conjugates. With z1 equals 1 plus 2i and z2 equals 3 plus i, the sum is 4 plus 3i, and its conjugate is 4 minus 3i. If instead we conjugate first — 1 minus 2i plus 3 minus i — we also get 4 minus 3i.
+Hand over: "Now [STUDENT 5] will explain some conjugate examples and then absolute value."
 
-Rule three: the same works for multiplication. 1 plus i times 1 plus 2i equals negative 1 plus 3i, so the conjugate is negative 1 minus 3i. And 1 minus i times 1 minus 2i also gives negative 1 minus 3i.
+## Slide 9: Simple Examples of Complex Conjugates
 
-So the order doesn't matter: conjugate first or calculate first — you get the same result.
+Presenter: [STUDENT 5]
 
-## Slide 9 — Simple Examples of Complex Conjugates
+Hello, I'm [STUDENT 5]. Here are three quick examples.
 
-Let's try a few simple examples together.
+6 plus 2i becomes 6 minus 2i.
 
-Example 1: z equals 6 plus 2i. Keep the 6, flip the sign of 2i. So z bar equals 6 minus 2i.
+Minus 4 minus 3i becomes minus 4 plus 3i. Be careful here, the minus 4 stays the same. Only the imaginary part changes.
 
-Example 2: z equals negative 4 minus 3i. Be careful here — the real part, negative 4, does not change. Only the imaginary part flips, so z bar equals negative 4 plus 3i.
+And 7 stays 7, because there is no imaginary part to change. Any real number is its own conjugate.
 
-Example 3: z equals 7. There is no imaginary part at all, so there is nothing to flip. The conjugate of 7 is just 7. In general, every real number is its own conjugate.
+## Slide 10: Introduction to Absolute Value
 
-## Slide 10 — Introduction to Absolute Value
+Presenter: [STUDENT 5]
 
-Now let's move to our second main idea: the absolute value.
+The second idea is the absolute value. You already know it for real numbers: the absolute value of minus 5 is 5, because it's 5 steps from zero.
 
-You already know absolute value from real numbers. The absolute value of negative 5 is 5, because negative 5 is 5 steps away from zero. Absolute value is just distance.
+For a complex number, it's the distance from the origin. The formula is the square root of a squared plus b squared. It's also called the modulus.
 
-For a complex number, the idea is exactly the same: the absolute value is the distance from the origin to the point. If z equals a plus b i, then the absolute value of z equals the square root of a squared plus b squared. It is also called the modulus or magnitude.
+The formula comes from Pythagoras. The real part and the imaginary part are the two short sides of a right triangle, and the distance is the long side.
 
-Where does this formula come from? From the Pythagorean theorem! The real part and the imaginary part form the two short sides of a right triangle, and the distance is the long side — the hypotenuse. c squared equals a squared plus b squared.
+Hand over: "Now [STUDENT 6] will explain absolute value on the graph with two examples."
 
-## Slide 11 — Visualizing Absolute Value
+## Slide 11: Visualizing Absolute Value
 
-Let's see this in the picture. Here is z equals 3 plus 4i again.
+Presenter: [STUDENT 6]
 
-From the origin, we go 3 to the right — that's the real component. Then 4 up — that's the imaginary component. These two sides form a right triangle.
+Thank you. Let's look at 3 plus 4i on the graph. We go 3 to the right and 4 up. Together with the line from the origin, this makes a right triangle.
 
-The purple line from the origin to the point is the distance we want: the absolute value.
+The purple line is the distance we want. 3 squared plus 4 squared is 9 plus 16, which is 25, and the square root of 25 is 5. So this point is 5 units away from the origin.
 
-Using Pythagoras: 3 squared plus 4 squared is 9 plus 16, which is 25, and the square root of 25 is 5. So the point 3 plus 4i is exactly 5 units away from the origin. The absolute value of z is 5.
+## Slide 12: Calculating Absolute Value: Easy Examples
 
-## Slide 12 — Calculating Absolute Value: Easy Examples
+Presenter: [STUDENT 6]
 
-Let's try two simple examples step by step.
+Here are two worked examples.
 
-Example 1: z equals 3 plus 4i. Step one, square each part: 3 squared and 4 squared. Step two, add them: 9 plus 16 is 25. Step three, take the square root: the square root of 25 is 5. So the absolute value is 5.
+For 3 plus 4i: 3 squared is 9, 4 squared is 16, the sum is 25, and the square root is 5.
 
-Example 2: z equals 5 plus 12i. 5 squared is 25, 12 squared is 144. Add them: 169. The square root of 169 is 13. So the absolute value is 13.
+For 5 plus 12i: 5 squared is 25, 12 squared is 144, the sum is 169, and the square root is 13.
 
-Same three steps every time: square, add, square root. You can see that the result is always positive or zero.
+It's always the same three steps: square, add, then take the square root. And the answer can't be negative.
 
-## Slide 13 — Properties of Absolute Value
+Hand over: "Now [STUDENT 7] will explain the properties of absolute value and how the two ideas connect."
 
-The absolute value has four basic properties. Remember: absolute value means distance, and then they all make sense.
+## Slide 13: Properties of Absolute Value
 
-One: the absolute value is always greater than or equal to zero, because a distance can never be negative.
+Presenter: [STUDENT 7]
 
-Two: the absolute value is zero only when z itself is zero — only the origin is at distance zero.
+Hi, I'm [STUDENT 7]. The absolute value has four basic properties, and they all make sense if you remember it's a distance.
 
-Three: z bar has the same absolute value as z. That makes sense: a mirror image is the same distance from the origin. For example, 3 minus 4i also has absolute value 5.
+One, it's never negative. Two, it's zero only when z itself is zero. Three, the conjugate has the same absolute value, because a reflection is the same distance from the origin. 3 minus 4i also gives 5.
 
-Four: the absolute value of a product is the product of the absolute values. For example, 3 plus 4i times 2 is 6 plus 8i, whose absolute value is 10 — and that is 5 times 2.
+Four, the absolute value of a product is the product of the absolute values. 3 plus 4i times 2 is 6 plus 8i, and its absolute value is 10, which is 5 times 2.
 
-## Slide 14 — The Important Connection
+## Slide 14: The Important Connection
 
-Now we understand why these two ideas are connected. Here is the most important identity in this topic: z times z bar equals the absolute value of z, squared.
+Presenter: [STUDENT 7]
 
-Let's check it with z equals 3 plus 4i. z bar is 3 minus 4i. Multiply: 3 times 3 is 9, then minus 12i plus 12i — those cancel — and 4i times negative 4i is negative 16 i squared. Since i squared is negative 1, negative 16 i squared becomes plus 16. So we get 9 plus 16, which is 25.
+This is where the two ideas meet: z times z bar equals the absolute value of z, squared.
 
-And the absolute value of z is 5, so the absolute value squared is 25. Exactly the same!
+Let's check with 3 plus 4i. We multiply 3 plus 4i by 3 minus 4i. The middle terms, minus 12i and plus 12i, cancel. Minus 16 i squared becomes plus 16, because i squared is minus 1. So we get 25. And the absolute value is 5, and 5 squared is also 25.
 
-Why is this useful? Because multiplying a number by its conjugate always gives a real number — the i disappears. That is exactly the trick we use to divide complex numbers: we multiply the top and bottom by the conjugate, so the bottom becomes a real number.
+This is useful because the result is always a real number. That's the reason we multiply by the conjugate when we divide complex numbers.
 
-## Slide 15 — Conjugate vs. Absolute Value
+Hand over: "Now [STUDENT 8] will explain a comparison and some real-life applications."
 
-Let's put the two ideas side by side, because students often mix them up.
+## Slide 15: Conjugate vs. Absolute Value
 
-The conjugate changes the sign of the imaginary part. The absolute value gives the size, or magnitude.
+Presenter: [STUDENT 8]
 
-The conjugate gives you another complex number. The absolute value gives you a real number that is never negative.
+Thank you. Here are the two ideas side by side, because they are easy to mix up.
 
-The formulas: z bar equals a minus b i, and the absolute value equals the square root of a squared plus b squared.
+The conjugate changes a sign and gives another complex number. The absolute value gives the size, a real number that is zero or positive. On the graph, the conjugate is a reflection and the absolute value is a distance.
 
-In the picture, the conjugate is a reflection across the real axis, while the absolute value is a distance from the origin.
+For 3 plus 4i, the conjugate is 3 minus 4i and the absolute value is 5.
 
-For our favourite example, 3 plus 4i: the conjugate is 3 minus 4i, and the absolute value is 5.
+## Slide 16: Real-Life Applications
 
-## Slide 16 — Real-Life Applications
+Presenter: [STUDENT 8]
 
-You might be wondering: is this only for math class? Not at all — especially for us in IT.
+So where do we actually use this? In electrical engineering, AC current and voltage are written with complex numbers. They're also used in signal processing, in communication systems like Wi-Fi and mobile networks, and in sound analysis.
 
-In electrical engineering, alternating current is described with complex numbers. In digital signal processing — things like audio filters and image processing — computers work with complex values. Communication systems such as Wi-Fi and mobile networks send data by changing the magnitude and phase of signals. And in sound analysis, every frequency in a sound has a size and a timing.
+The picture shows the basic idea. Imagine an arrow that keeps rotating. Its length is the magnitude, which is the absolute value we just learned, and its angle is the phase. As it rotates, it draws a wave. So one complex number holds two pieces of information at once.
 
-Look at the picture. Imagine an arrow rotating in a circle. Its length is the magnitude — that is exactly the absolute value we learned. Its angle is the phase. As it rotates, it draws a wave.
+Hand over: "Now [STUDENT 9] will explain a short quiz and the conclusion."
 
-So the key idea is: one complex number can store two pieces of information about a signal at once — how big it is, and where it is in its cycle.
+## Slide 17: Practice and Quick Quiz
 
-## Slide 17 — Practice and Quick Quiz
+Presenter: [STUDENT 9]
 
-Now it's your turn! Let's do a quick quiz. Try each question in your head first, and then I'll reveal the answer.
+Hello, I'm [STUDENT 9]. Now a short quiz. Try to answer before we show it.
 
-Question 1: find the conjugate of 4 plus 6i. [click] Keep the 4, flip the sign: 4 minus 6i.
+Question 1: the conjugate of 4 plus 6i. [click] It's 4 minus 6i.
 
-Question 2: find the absolute value of 3 plus 4i. [click] 9 plus 16 is 25, square root is 5.
+Question 2: the absolute value of 3 plus 4i. [click] 5.
 
-Question 3: find the conjugate of negative 2 minus 5i. [click] The real part stays negative 2, the imaginary part flips: negative 2 plus 5i.
+Question 3: the conjugate of minus 2 minus 5i. [click] Minus 2 plus 5i. The minus 2 stays.
 
-Question 4: if z equals 5 plus 12i, calculate the absolute value. [click] 25 plus 144 is 169, square root is 13.
+Question 4: the absolute value of 5 plus 12i. [click] 13.
 
-How many did you get right? If you got all four — you have understood today's topic!
+## Slide 18: Conclusion
 
-## Slide 18 — Conclusion & Thank You
+Presenter: [STUDENT 9]
 
-Let's summarise what we learned today.
+To sum up. A complex number has a real part and an imaginary part. The conjugate changes the sign of the imaginary part. The absolute value is the distance from the origin. And z times z bar equals the absolute value squared, which connects the two ideas. These ideas are used a lot in IT and engineering.
 
-First, a complex number has a real part and an imaginary part: z equals a plus b i.
-Second, the conjugate changes the sign of the imaginary part — geometrically, it's a mirror image across the real axis.
-Third, the absolute value is the distance from the origin, found with the Pythagorean theorem.
-Fourth, these two ideas meet in one beautiful identity: z times z bar equals the absolute value squared.
-And finally, complex numbers are not just theory — they are used every day in IT and engineering.
-
-The references I used are listed here. Thank you very much for listening — I'm happy to answer any questions.
+Our references are on the slide. Thank you for listening. We're happy to answer any questions.

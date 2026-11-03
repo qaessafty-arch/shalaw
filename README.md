@@ -1,6 +1,6 @@
 # Complex Numbers: Properties of Complex Conjugate and Absolute Value
 
-An 18-slide university presentation for first-year students.
+An 18-slide group presentation for first-year students. It is split between **9 presenters, 2 slides each**, and each presenter's name is printed at the bottom of their slides.
 
 - **University:** Salahaddin University-Erbil
 - **School:** School of Science
@@ -13,15 +13,15 @@ An 18-slide university presentation for first-year students.
 | `Complex_Numbers_Conjugate_and_Absolute_Value.pptx` | Editable PowerPoint deck. It has 18 slides, speaker notes on every slide, and click-to-reveal quiz answers on slide 17. |
 | `Complex_Numbers_Conjugate_and_Absolute_Value.pdf` | PDF version. The quiz answers are shown, because a PDF cannot animate. |
 | `SPEAKER_NOTES.md` | Speaker notes for all 18 slides. These are the same notes that are inside the .pptx. |
-| `PRESENTATION_SCRIPT.md` | A natural, timed script (about 12–14 minutes) with delivery tips. |
+| `PRESENTATION_SCRIPT.md` | The script split by presenter (Student 1 to Student 9), with the hand-over line between speakers. |
 | `MATH_ACCURACY_CHECKLIST.md` | Each formula, example and quiz answer, checked. |
 | `source/` | The generator script (`build.js`). Rebuild the deck from here after you change names or the logo. |
 
 ## Before presenting
 
-1. **Fill in your details.**
-   - In PowerPoint, replace `[STUDENT NAME]`, `[LECTURER NAME]` and `[ACADEMIC YEAR]` on slides 1 and 18.
-   - Or edit the `INFO` block at the top of `source/build.js` and rebuild. Rebuilding also updates the speaker notes.
+1. **Fill in your names.**
+   - The best way is to edit the `INFO` block at the top of `source/build.js` (`students`, `lecturer`, `year`) and rebuild. This fills the cover, every slide footer and the speaker notes at once.
+   - You can also replace `[STUDENT 1]` to `[STUDENT 9]`, `[LECTURER NAME]` and `[ACADEMIC YEAR]` by hand in PowerPoint with Replace (Ctrl+H).
 2. **Add the official university logo.**
    - Save the official Salahaddin University-Erbil logo as `assets/su-logo.png`. A transparent PNG works best.
    - Rebuild (see below). The logo then replaces the dashed placeholder on slide 1.
@@ -55,5 +55,5 @@ soffice --headless --convert-to pdf Complex_Numbers_Conjugate_and_Absolute_Value
   - White `#FFFFFF`
   - Dark Text `#20243A`
   - Light Gray `#E8E8F0`
-- **Slides:** dark slides frame the talk (cover, introduction, key identity, conclusion); the content slides are light.
+- **Style:** plain white content slides and a few dark slides (cover, introduction, key identity, conclusion). There are no decorative icons, shadows or stock phrases, so it reads like a real student deck.
 - **Diagrams:** every complex-plane diagram is built from native PowerPoint shapes, drawn to scale, and fully editable.

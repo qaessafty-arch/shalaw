@@ -1,114 +1,147 @@
-# Presentation Script
+# Presentation Script (9 presenters)
 
-**Complex Numbers: Properties of Complex Conjugate and Absolute Value**
-Salahaddin University-Erbil · School of Science · Department of Information Technology
+Complex Numbers: Properties of Complex Conjugate and Absolute Value
 
-Total time: about **12–14 minutes** plus questions (around 45 seconds per slide).
-`[click]` marks a click. On slide 17, each click reveals one quiz answer.
+The talk has 18 slides and each person presents 2 of them. Plan for about 1.5 minutes per person, which makes about 13 to 14 minutes in total, plus questions.
+
+| Presenter | Slides | Part |
+|---|---|---|
+| Student 1 | 1, 2 | Opening and why we need complex numbers |
+| Student 2 | 3, 4 | What a complex number is, real and imaginary parts |
+| Student 3 | 5, 6 | The complex plane, what a conjugate is |
+| Student 4 | 7, 8 | The conjugate on the graph, rules of the conjugate |
+| Student 5 | 9, 10 | Conjugate examples, introduction to absolute value |
+| Student 6 | 11, 12 | Absolute value on the graph, worked examples |
+| Student 7 | 13, 14 | Properties of absolute value, the identity z z̄ = \|z\|² |
+| Student 8 | 15, 16 | Comparison table, real-life applications |
+| Student 9 | 17, 18 | Quiz and conclusion |
+
+Each presenter's name is printed at the bottom of their slides. Replace the `[STUDENT 1]` to `[STUDENT 9]` placeholders with your real names.
 
 ---
 
-### Part 1: Opening (Slides 1–2) · about 1.5 min
+## Student 1 (slides 1 and 2)
 
-**[Slide 1]**
-Good morning everyone. My name is [STUDENT NAME]. Today's topic is complex numbers, and I will focus on two ideas: the **complex conjugate** and the **absolute value**.
-If complex numbers sound difficult, don't worry. By the end you will see that one idea means *flipping a sign* and the other means *measuring a distance*.
+**Slide 1**
+Good morning everyone. We are nine students from the IT department, and our topic today is complex numbers. We will mainly talk about two things: the complex conjugate and the absolute value. Each of us will present two slides. I'm [Student 1], and I'll start with why we need complex numbers in the first place.
 
-**[Slide 2]**
-Let's start with a simple question: can we find the square root of a negative number?
-With real numbers, no. Two squared is 4, negative two squared is also 4, and zero squared is zero. A real number squared is never negative.
-So mathematicians created a new number, **i**, with one rule: **i² = −1**. Now x² = −1 has two answers, i and −i.
+**Slide 2**
+So, can we take the square root of a negative number? With real numbers we can't. 2 squared is 4, minus 2 squared is also 4, and 0 squared is 0. A square is never negative, so x² = −1 has no real answer.
+To solve this, mathematicians defined a new number, i, where i² = −1. With i, the equation x² = −1 has two answers, i and −i.
+*Hand over:* "Now [Student 2] will explain what a complex number actually is."
 
-### Part 2: Foundations (Slides 3–5) · about 2.5 min
+## Student 2 (slides 3 and 4)
 
-**[Slide 3]**
-A complex number has the form **z = a + bi**. Here *a* is the real part, *b* is the imaginary part, and *i* is the imaginary unit.
-Put simply, a complex number is a real number plus an imaginary number. For example, 3 + 4i, or 2 − 5i.
+**Slide 3**
+Thank you. A complex number is written as z = a + bi. Here a is the real part, b is the imaginary part, and i is the imaginary unit. So it's simply a real number plus an imaginary number.
+For example, 3 + 4i has real part 3 and imaginary part 4. 2 − 5i has real part 2 and imaginary part −5, because the minus sign belongs to the imaginary part.
 
-**[Slide 4]**
-Let's practise reading one. In 5 + 2i, the real part is 5 and the imaginary part is 2. In −3 + 7i, the real part is −3 and the imaginary part is 7.
-Notice something interesting: the imaginary part is only the number in front of *i*. It is 2, not 2i.
+**Slide 4**
+Let's practise. In 5 + 2i, the real part is 5 and the imaginary part is 2. In −3 + 7i, the real part is −3 and the imaginary part is 7.
+A common mistake is to say the imaginary part is 2i. It's just 2, the number in front of i.
+*Hand over:* "Now [Student 3] will explain the complex plane and the conjugate."
 
-**[Slide 5]**
-We can also draw complex numbers on the complex plane. The horizontal axis is real and the vertical axis is imaginary.
-To plot 3 + 4i, go 3 to the right and 4 up. Every complex number is a point.
+## Student 3 (slides 5 and 6)
 
-### Part 3: The Complex Conjugate (Slides 6–9) · about 3.5 min
+**Slide 5**
+Thank you. We can also draw complex numbers. The horizontal axis is the real axis and the vertical axis is the imaginary axis. So a + bi is the point (a, b). For 3 + 4i we go 3 to the right and 4 up.
 
-**[Slide 6]**
-Here is our first main idea. If z = a + bi, its conjugate **z̄** ("z bar") is **a − bi**.
-An easy way to remember it: keep the real part and flip the sign of the imaginary part. So 3 + 4i becomes 3 − 4i.
+**Slide 6**
+Now the first main idea, the conjugate. If z = a + bi, the conjugate z̄ (we say "z bar") is a − bi. We keep the real part and change the sign of the imaginary part. For example, 3 + 4i becomes 3 − 4i.
+*Hand over:* "Now [Student 4] will show how the conjugate looks on the graph and its rules."
 
-**[Slide 7]**
-In the picture, 3 + 4i is 4 units up and 3 − 4i is 4 units down. The real axis works like a mirror, so the conjugate is a **reflection across the real axis**.
+## Student 4 (slides 7 and 8)
 
-**[Slide 8]**
-Conjugates follow three simple rules:
-one, conjugating twice brings you back to z;
-two, the conjugate of a sum is the sum of the conjugates;
-three, the same is true for products.
-The examples show that you get the same answer whether you conjugate first or calculate first.
+**Slide 7**
+Thank you. On the graph, 3 + 4i is four units above the real axis and 3 − 4i is four units below it. The real part is the same, only the side changes. So the conjugate is a reflection across the real axis, like a mirror.
 
-**[Slide 9]**
-Let's try three quick ones. 6 + 2i becomes 6 − 2i. −4 − 3i becomes −4 + 3i, and the real part −4 does **not** change. And 7 stays 7, because a real number is its own conjugate.
+**Slide 8**
+The conjugate has three simple rules. We won't prove them, we'll just check them with numbers.
+- Taking the conjugate twice gives z back.
+- The conjugate of a sum is the sum of the conjugates.
+- The conjugate of a product is the product of the conjugates.
 
-### Part 4: Absolute Value (Slides 10–13) · about 3.5 min
+In each example on the slide, both ways give the same result.
+*Hand over:* "Now [Student 5] will go through some conjugate examples and then absolute value."
 
-**[Slide 10]**
-Now the second idea. You already know |−5| = 5, because −5 is five steps from zero. For a complex number, the absolute value is the **distance from the origin**:
-**|z| = √(a² + b²)**. This formula comes from the Pythagorean theorem.
+## Student 5 (slides 9 and 10)
 
-**[Slide 11]**
-Look at 3 + 4i. We go 3 across and 4 up, which makes a right triangle. The distance is the long side: √(9 + 16) = √25 = **5**.
+**Slide 9**
+Hello, I'm [Student 5]. Here are three quick examples.
+- 6 + 2i becomes 6 − 2i.
+- −4 − 3i becomes −4 + 3i. Be careful here: the −4 stays the same.
+- 7 stays 7, because there's no imaginary part. Any real number is its own conjugate.
 
-**[Slide 12]**
-The method is always the same three steps: square each part, add them, take the square root.
-For 3 + 4i the answer is 5. For 5 + 12i: 25 + 144 = 169, and √169 = **13**.
+**Slide 10**
+The second idea is the absolute value. For real numbers, |−5| = 5, because −5 is five steps from zero. For a complex number, it's the distance from the origin: |z| = √(a² + b²). The formula comes from Pythagoras, where the real part and the imaginary part are the two short sides of a right triangle.
+*Hand over:* "Now [Student 6] will show absolute value on the graph with two examples."
 
-**[Slide 13]**
-Four properties, and each one makes sense once you think of distance.
-A distance is never negative.
-It is zero only at the origin.
-A mirror image is the same distance away, so |z̄| = |z|.
-And when you multiply two numbers, you also multiply their sizes.
+## Student 6 (slides 11 and 12)
 
-### Part 5: Connecting the Ideas (Slides 14–15) · about 2 min
+**Slide 11**
+Thank you. Look at 3 + 4i on the graph: 3 to the right and 4 up. Together with the line from the origin, this makes a right triangle. 3² + 4² = 9 + 16 = 25, and √25 = 5. So the point is 5 units from the origin.
 
-**[Slide 14]**
-Now we understand why these two ideas are connected: **z · z̄ = |z|²**.
-Check it: (3 + 4i)(3 − 4i) = 9 − 16i² = 9 + 16 = 25, and 5² = 25. The answer is always a real number, which is why we use the conjugate to divide complex numbers.
+**Slide 12**
+Two worked examples. For 3 + 4i: 9 + 16 = 25, and the square root is 5. For 5 + 12i: 25 + 144 = 169, and the square root is 13. The steps are always the same: square, add, then take the square root.
+*Hand over:* "Now [Student 7] will explain the properties of absolute value and how the two ideas connect."
 
-**[Slide 15]**
-Side by side: the conjugate gives another complex number and is a reflection. The absolute value gives a non-negative real number and is a distance. For 3 + 4i, z̄ = 3 − 4i and |z| = 5.
+## Student 7 (slides 13 and 14)
 
-### Part 6: Applications, Quiz and Close (Slides 16–18) · about 3 min
+**Slide 13**
+Hi, I'm [Student 7]. The absolute value has four properties, and they all make sense if you think of it as a distance.
+1. It's never negative.
+2. It's zero only when z = 0.
+3. The conjugate has the same absolute value, because a reflection is the same distance from the origin.
+4. The absolute value of a product is the product of the absolute values: |6 + 8i| = 10 = 5 × 2.
 
-**[Slide 16]**
-This is not only theory. Electrical engineers, signal processing, Wi-Fi and mobile networks, and sound analysis all use complex numbers.
-Think of a rotating arrow: its **length** is the magnitude, which is |z|, and its **angle** is the phase. One complex number stores both.
+**Slide 14**
+This is where the two ideas meet: z · z̄ = |z|². Let's check with 3 + 4i:
+- (3 + 4i)(3 − 4i) = 9 − 12i + 12i − 16i².
+- The middle terms cancel, and −16i² is +16, so the result is 25.
+- |z| = 5, and 5² is also 25.
 
-**[Slide 17]**
-Your turn! Try each one first.
-Q1: the conjugate of 4 + 6i is… `[click]` 4 − 6i.
-Q2: |3 + 4i| is… `[click]` 5.
-Q3: the conjugate of −2 − 5i is… `[click]` −2 + 5i.
-Q4: |5 + 12i| is… `[click]` 13.
+The result is always a real number, which is why we use the conjugate when dividing complex numbers.
+*Hand over:* "Now [Student 8] will compare the two ideas and show some real-life applications."
 
-**[Slide 18]**
-To summarise:
+## Student 8 (slides 15 and 16)
+
+**Slide 15**
+Thank you. Here are the two ideas side by side, because they're easy to mix up.
+
+| | Conjugate | Absolute value |
+|---|---|---|
+| What you get | Another complex number (the sign changes) | A size: a real number, zero or positive |
+| On the graph | A reflection | A distance |
+| For 3 + 4i | 3 − 4i | 5 |
+
+**Slide 16**
+Where is this used? In electrical engineering for AC current and voltage, in signal processing, in Wi-Fi and mobile networks, and in sound analysis. The picture shows a rotating arrow. Its length is the magnitude, which is |z|, and its angle is the phase. So one complex number stores both.
+*Hand over:* "Now [Student 9] will finish with a short quiz and the conclusion."
+
+## Student 9 (slides 17 and 18)
+
+**Slide 17**
+Hello, I'm [Student 9]. Let's do a short quiz. Try to answer first, and each click shows one answer.
+1. The conjugate of 4 + 6i. *(click)* 4 − 6i.
+2. |3 + 4i|. *(click)* 5.
+3. The conjugate of −2 − 5i. *(click)* −2 + 5i.
+4. |5 + 12i|. *(click)* 13.
+
+**Slide 18**
+To sum up:
 - A complex number has a real part and an imaginary part.
-- The conjugate flips the imaginary sign.
-- The absolute value is a distance.
-- z z̄ = |z|² connects the two ideas.
-- Complex numbers are used every day in IT and engineering.
+- The conjugate changes the sign of the imaginary part.
+- The absolute value is the distance from the origin.
+- z · z̄ = |z|² connects the two ideas.
+- These ideas are used a lot in IT and engineering.
 
-My references are listed on the slide. Thank you for listening. I'm happy to answer any questions.
+Our references are on the slide. Thank you for listening, and we're happy to answer any questions.
 
 ---
 
-## Delivery tips
+## Tips for the group
 
-- When you say "flip the sign", point at the sign on the slide.
-- On slides 7 and 11, trace the arrow or triangle with your hand or a pointer. The picture explains it faster than words.
-- Pause for 3–4 seconds before each quiz click so classmates can think.
-- If you are asked "why √(a² + b²)?", go back to slide 11 and point to the right triangle.
+- Practise the hand-overs once together. A smooth hand-over makes the whole group look prepared.
+- Don't read from the slide. Look at the class and point at the graph or formula you're talking about.
+- On slide 17, wait 3 or 4 seconds before each click so people can think.
+- If someone asks a question about another person's part, it's fine to say "[Name] covered that, let them answer."
