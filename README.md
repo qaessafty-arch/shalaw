@@ -1,6 +1,6 @@
 # Complex Numbers: Properties of Complex Conjugate and Absolute Value
 
-An 18-slide group presentation for first-year students. It is split between **9 presenters, 2 slides each**, and each presenter's name is printed at the bottom of their slides.
+A 19-slide group presentation for first-year students (cover, outline and 17 content slides). It is split between **9 presenters**: Student 1 has the cover, outline and introduction, and everyone else has 2 slides, and each presenter's name is printed at the bottom of their slides.
 
 - **University:** Salahaddin University-Erbil
 - **School:** School of Science
@@ -10,9 +10,9 @@ An 18-slide group presentation for first-year students. It is split between **9 
 
 | File | What it is |
 |---|---|
-| `Complex_Numbers_Conjugate_and_Absolute_Value.pptx` | Editable PowerPoint deck. It has 18 slides, speaker notes on every slide, and click-to-reveal quiz answers on slide 17. |
+| `Complex_Numbers_Conjugate_and_Absolute_Value.pptx` | Editable PowerPoint deck. It has 19 slides, speaker notes on every slide, and click-to-reveal quiz answers on slide 18. |
 | `Complex_Numbers_Conjugate_and_Absolute_Value.pdf` | PDF version. The quiz answers are shown, because a PDF cannot animate. |
-| `SPEAKER_NOTES.md` | Speaker notes for all 18 slides. These are the same notes that are inside the .pptx. |
+| `SPEAKER_NOTES.md` | Speaker notes for all 19 slides. These are the same notes that are inside the .pptx. |
 | `PRESENTATION_SCRIPT.md` | The script split by presenter (Student 1 to Student 9), with the hand-over line between speakers. |
 | `REFERENCES.md` | Harvard reference list, plus which source supports which slide. |
 | `MATH_ACCURACY_CHECKLIST.md` | Each formula, example and quiz answer, checked. |

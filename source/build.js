@@ -30,7 +30,10 @@ const INFO = {
   lecturer: "[LECTURER NAME]",
   year: "[ACADEMIC YEAR]",
 };
-const presenter = (slideNo) => INFO.students[Math.floor((slideNo - 1) / 2)];
+// Student 1 presents slides 1-3 (cover, outline, introduction); everyone else presents 2 slides.
+const presenterIndex = (slideNo) => (slideNo <= 3 ? 0 : Math.floor((slideNo - 2) / 2));
+const presenter = (slideNo) => INFO.students[presenterIndex(slideNo)];
+const TOTAL_SLIDES = 19;
 
 // What the next presenter talks about (used for hand-over lines in the notes).
 const NEXT_TOPIC = {
@@ -186,7 +189,9 @@ function source(slide, cite, dark = false) {
 function notes(slide, body) {
   const n = slideCount;
   let t = "Presenter: " + presenter(n) + "\n\n" + body;
-  if (n % 2 === 0 && n < 18) t += "\n\nHand over: \"Now " + presenter(n + 1) + " will explain " + NEXT_TOPIC[n / 2 + 1] + ".\"";
+  if (n < TOTAL_SLIDES && presenterIndex(n + 1) !== presenterIndex(n)) {
+    t += "\n\nHand over: \"Now " + presenter(n + 1) + " will explain " + NEXT_TOPIC[presenterIndex(n + 1) + 1] + ".\"";
+  }
   slide.addNotes(t);
 }
 
@@ -323,12 +328,40 @@ async function build() {
     s.addNotes(
       "Presenter: " + presenter(1) + "\n\n" +
       "Good morning everyone. We are nine students from the IT department and our topic today is complex numbers. " +
-      "We will mainly talk about two things, the complex conjugate and the absolute value. Each of us will present two slides.\n\n" +
-      "I'm " + presenter(1) + ", and I'll start with why we need complex numbers in the first place."
+      "We will mainly talk about two things, the complex conjugate and the absolute value. Each of us will present one part.\n\n" +
+      "I'm " + presenter(1) + ". First, here is the outline of our talk."
     );
   }
 
-  // ================================================= SLIDE 2 — Why complex numbers?
+  // ================================================= SLIDE 2 — Outline
+  {
+    const s = contentSlide("Outline", "Introduction");
+    const parts = [
+      ["Introduction", "Why we need complex numbers", "Slide 3", [0]],
+      ["The basics", "Complex numbers, real and imaginary parts, the complex plane", "Slides 4–6", [1, 2]],
+      ["The complex conjugate", "Definition, picture on the graph, rules and examples", "Slides 7–10", [2, 3, 4]],
+      ["Absolute value", "Meaning, picture on the graph, worked examples, properties", "Slides 11–14", [4, 5, 6]],
+      ["Connecting the two ideas", "The identity z" + ZB + " = |z|² and a side-by-side comparison", "Slides 15–16", [6, 7]],
+      ["Applications, quiz and conclusion", "Where complex numbers are used, practice questions, summary", "Slides 17–19", [7, 8]],
+    ];
+    const rowH = 0.83, y0 = 1.6;
+    parts.forEach(([h, d, sl, who], i) => {
+      const y = y0 + i * rowH;
+      if (i > 0) line(s, M, y, W - M, y, { color: C.gray, width: 1, name: "Row divider" });
+      text(s, String(i + 1), { x: M, y, w: 0.6, h: rowH, fontFace: HEAD, fontSize: 26, bold: true, color: C.purple, valign: "middle" });
+      text(s, h, { x: M + 0.75, y: y + 0.1, w: 6.6, h: 0.36, fontSize: 18, bold: true, color: C.text, valign: "middle" });
+      text(s, d, { x: M + 0.75, y: y + 0.44, w: 6.6, h: 0.32, fontSize: 14, color: C.muted, valign: "middle" });
+      text(s, sl, { x: 8.0, y: y + 0.1, w: 4.73, h: 0.36, fontSize: 14, bold: true, color: C.text, align: "right", valign: "middle" });
+      text(s, who.map((k) => INFO.students[k]).join(",  "), { x: 8.0, y: y + 0.44, w: 4.73, h: 0.32, fontSize: 12, color: C.muted, align: "right", valign: "middle" });
+    });
+    notes(s,
+      "Here is the plan for today. I'll start with why complex numbers are needed. Then we go through the basics: what a complex number is and how to draw it.\n\n" +
+      "After that come our two main ideas, the complex conjugate and the absolute value, and then how they are connected. At the end we show some real-life uses, a short quiz for you, and a summary.\n\n" +
+      "On the right you can see who presents each part."
+    );
+  }
+
+  // ================================================= SLIDE 3 — Why complex numbers?
   {
     const s = contentSlide("Why Complex Numbers?", "Introduction", true);
     box(s, M, 1.85, 7.1, 1.3, { fill: C.deep, name: "Question box" });
@@ -578,7 +611,7 @@ async function build() {
     });
     source(s, "Abramson (2021a)");
     notes(s,
-      "Hello, I'm " + presenter(9) + ". Here are three quick examples.\n\n" +
+      "Hello, I'm " + presenter(slideCount) + ". Here are three quick examples.\n\n" +
       "6 plus 2i becomes 6 minus 2i.\n\n" +
       "Minus 4 minus 3i becomes minus 4 plus 3i. Be careful here, the minus 4 stays the same. Only the imaginary part changes.\n\n" +
       "And 7 stays 7, because there is no imaginary part to change. Any real number is its own conjugate."
@@ -713,7 +746,7 @@ async function build() {
     });
     source(s, "Brown and Churchill (2014)");
     notes(s,
-      "Hi, I'm " + presenter(13) + ". The absolute value has four basic properties, and they all make sense if you remember it's a distance.\n\n" +
+      "Hi, I'm " + presenter(slideCount) + ". The absolute value has four basic properties, and they all make sense if you remember it's a distance.\n\n" +
       "One, it's never negative. Two, it's zero only when z itself is zero. Three, the conjugate has the same absolute value, because a reflection is the same distance from the origin. 3 minus 4i also gives 5.\n\n" +
       "Four, the absolute value of a product is the product of the absolute values. 3 plus 4i times 2 is 6 plus 8i, and its absolute value is 10, which is 5 times 2."
     );
@@ -839,7 +872,7 @@ async function build() {
       s.addText(a, { isTextBox: true, shape: pres.shapes.ROUNDED_RECTANGLE, rectRadius: 0.05, x: x + 0.3, y: y + 1.45, w: 2.9, h: 0.5, fill: { color: C.lavender }, line: { color: C.lavender, width: 0 }, fontFace: MATH, fontSize: 20, bold: true, italic: true, color: C.purple, align: "center", valign: "middle", margin: 0, objectName: nm });
     });
     notes(s,
-      "Hello, I'm " + presenter(17) + ". Now a short quiz. Try to answer before we show it.\n\n" +
+      "Hello, I'm " + presenter(slideCount) + ". Now a short quiz. Try to answer before we show it.\n\n" +
       "Question 1: the conjugate of 4 plus 6i. [click] It's 4 minus 6i.\n\n" +
       "Question 2: the absolute value of 3 plus 4i. [click] 5.\n\n" +
       "Question 3: the conjugate of minus 2 minus 5i. [click] Minus 2 plus 5i. The minus 2 stays.\n\n" +
@@ -880,10 +913,10 @@ async function build() {
     );
   }
 
-  if (slideCount !== 18) throw new Error("Expected 18 slides, built " + slideCount);
+  if (slideCount !== TOTAL_SLIDES) throw new Error("Expected " + TOTAL_SLIDES + " slides, built " + slideCount);
   await pres.writeFile({ fileName: OUT });
   await applyTheme(OUT, THEME);
-  await addRevealAnimations(OUT, 17, answerNames);
+  await addRevealAnimations(OUT, 18, answerNames);
   console.log("Wrote " + OUT + (hasLogo ? " (with logo)" : " (logo placeholder: add assets/su-logo.png)"));
 }
 

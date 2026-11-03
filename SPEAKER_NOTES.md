@@ -1,16 +1,26 @@
 # Speaker Notes
 
-These are the same notes that are inside the PowerPoint file (View > Notes). There are 9 presenters and each one presents 2 slides.
+These are the same notes that are inside the PowerPoint file (View > Notes). There are 9 presenters: Student 1 has slides 1 to 3, and everyone else has 2 slides.
 
 ## Slide 1: Cover
 
 Presenter: [STUDENT 1]
 
-Good morning everyone. We are nine students from the IT department and our topic today is complex numbers. We will mainly talk about two things, the complex conjugate and the absolute value. Each of us will present two slides.
+Good morning everyone. We are nine students from the IT department and our topic today is complex numbers. We will mainly talk about two things, the complex conjugate and the absolute value. Each of us will present one part.
 
-I'm [STUDENT 1], and I'll start with why we need complex numbers in the first place.
+I'm [STUDENT 1]. First, here is the outline of our talk.
 
-## Slide 2: Why Complex Numbers?
+## Slide 2: Outline
+
+Presenter: [STUDENT 1]
+
+Here is the plan for today. I'll start with why complex numbers are needed. Then we go through the basics: what a complex number is and how to draw it.
+
+After that come our two main ideas, the complex conjugate and the absolute value, and then how they are connected. At the end we show some real-life uses, a short quiz for you, and a summary.
+
+On the right you can see who presents each part.
+
+## Slide 3: Why Complex Numbers?
 
 Presenter: [STUDENT 1]
 
@@ -20,7 +30,7 @@ To solve this, mathematicians defined a new number, i, where i squared equals mi
 
 Hand over: "Now [STUDENT 2] will explain what a complex number actually is."
 
-## Slide 3: What Is a Complex Number?
+## Slide 4: What Is a Complex Number?
 
 Presenter: [STUDENT 2]
 
@@ -28,7 +38,7 @@ Thank you. A complex number is written as z equals a plus b i. Here a is the rea
 
 For example, 3 plus 4i has real part 3 and imaginary part 4. And 2 minus 5i has real part 2 and imaginary part minus 5. The minus sign belongs to the imaginary part.
 
-## Slide 4: Understanding Real and Imaginary Parts
+## Slide 5: Understanding Real and Imaginary Parts
 
 Presenter: [STUDENT 2]
 
@@ -38,7 +48,7 @@ One common mistake: people write the imaginary part as 2i. It's just 2, the numb
 
 Hand over: "Now [STUDENT 3] will explain the complex plane and the conjugate."
 
-## Slide 5: The Complex Plane
+## Slide 6: The Complex Plane
 
 Presenter: [STUDENT 3]
 
@@ -46,7 +56,7 @@ Thank you. We can also draw complex numbers on a plane. The horizontal axis is t
 
 So a plus b i is just the point (a, b). For 3 plus 4i, we go 3 to the right and 4 up.
 
-## Slide 6: What Is a Complex Conjugate?
+## Slide 7: What Is a Complex Conjugate?
 
 Presenter: [STUDENT 3]
 
@@ -56,7 +66,7 @@ So we keep the real part and change the sign of the imaginary part. Nothing else
 
 Hand over: "Now [STUDENT 4] will explain how the conjugate looks on the graph and its rules."
 
-## Slide 7: Visualizing the Complex Conjugate
+## Slide 8: Visualizing the Complex Conjugate
 
 Presenter: [STUDENT 4]
 
@@ -64,7 +74,7 @@ Thank you. Here is the conjugate on the graph. The point 3 plus 4i is four units
 
 The real part is the same, only the side changes. So the conjugate is a reflection across the real axis, like looking in a mirror. If you fold the paper along the real axis, the two points meet.
 
-## Slide 8: Basic Properties of Complex Conjugates
+## Slide 9: Basic Properties of Complex Conjugates
 
 Presenter: [STUDENT 4]
 
@@ -78,7 +88,7 @@ Third, the same works for multiplication. Both ways give minus 1 minus 3i.
 
 Hand over: "Now [STUDENT 5] will explain some conjugate examples and then absolute value."
 
-## Slide 9: Simple Examples of Complex Conjugates
+## Slide 10: Simple Examples of Complex Conjugates
 
 Presenter: [STUDENT 5]
 
@@ -90,7 +100,7 @@ Minus 4 minus 3i becomes minus 4 plus 3i. Be careful here, the minus 4 stays the
 
 And 7 stays 7, because there is no imaginary part to change. Any real number is its own conjugate.
 
-## Slide 10: Introduction to Absolute Value
+## Slide 11: Introduction to Absolute Value
 
 Presenter: [STUDENT 5]
 
@@ -102,7 +112,7 @@ The formula comes from Pythagoras. The real part and the imaginary part are the 
 
 Hand over: "Now [STUDENT 6] will explain absolute value on the graph with two examples."
 
-## Slide 11: Visualizing Absolute Value
+## Slide 12: Visualizing Absolute Value
 
 Presenter: [STUDENT 6]
 
@@ -110,7 +120,7 @@ Thank you. Let's look at 3 plus 4i on the graph. We go 3 to the right and 4 up. 
 
 The purple line is the distance we want. 3 squared plus 4 squared is 9 plus 16, which is 25, and the square root of 25 is 5. So this point is 5 units away from the origin.
 
-## Slide 12: Calculating Absolute Value: Easy Examples
+## Slide 13: Calculating Absolute Value: Easy Examples
 
 Presenter: [STUDENT 6]
 
@@ -124,7 +134,7 @@ It's always the same three steps: square, add, then take the square root. And th
 
 Hand over: "Now [STUDENT 7] will explain the properties of absolute value and how the two ideas connect."
 
-## Slide 13: Properties of Absolute Value
+## Slide 14: Properties of Absolute Value
 
 Presenter: [STUDENT 7]
 
@@ -134,7 +144,7 @@ One, it's never negative. Two, it's zero only when z itself is zero. Three, the 
 
 Four, the absolute value of a product is the product of the absolute values. 3 plus 4i times 2 is 6 plus 8i, and its absolute value is 10, which is 5 times 2.
 
-## Slide 14: The Important Connection
+## Slide 15: The Important Connection
 
 Presenter: [STUDENT 7]
 
@@ -146,7 +156,7 @@ This is useful because the result is always a real number. That's the reason we 
 
 Hand over: "Now [STUDENT 8] will explain a comparison and some real-life applications."
 
-## Slide 15: Conjugate vs. Absolute Value
+## Slide 16: Conjugate vs. Absolute Value
 
 Presenter: [STUDENT 8]
 
@@ -156,7 +166,7 @@ The conjugate changes a sign and gives another complex number. The absolute valu
 
 For 3 plus 4i, the conjugate is 3 minus 4i and the absolute value is 5.
 
-## Slide 16: Real-Life Applications
+## Slide 17: Real-Life Applications
 
 Presenter: [STUDENT 8]
 
@@ -166,7 +176,7 @@ The picture shows the basic idea. Imagine an arrow that keeps rotating. Its leng
 
 Hand over: "Now [STUDENT 9] will explain a short quiz and the conclusion."
 
-## Slide 17: Practice and Quick Quiz
+## Slide 18: Practice and Quick Quiz
 
 Presenter: [STUDENT 9]
 
@@ -180,7 +190,7 @@ Question 3: the conjugate of minus 2 minus 5i. [click] Minus 2 plus 5i. The minu
 
 Question 4: the absolute value of 5 plus 12i. [click] 13.
 
-## Slide 18: Conclusion
+## Slide 19: Conclusion
 
 Presenter: [STUDENT 9]
 
