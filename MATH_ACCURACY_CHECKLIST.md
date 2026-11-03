@@ -67,7 +67,7 @@ The graphs are drawn to scale: one grid unit is one unit on both axes.
 - Exactly **18 slides**.  OK
 - English only, with no Kurdish or Arabic text.  OK
 - Beginner level: no proofs and no advanced formulas.  OK
-- References are real, published textbooks (slide 18).  OK
+- References are real and in Harvard style (slide 18 and REFERENCES.md), with an in-text citation on each content slide.  OK
 - University details: Salahaddin University-Erbil, School of Science, IT Department.  OK
 - 9 presenters, 2 slides each, with names in the slide footers.  OK
 - **Official logo:** the sandbox could not download it, so slide 1 has a marked placeholder. See README.md for how to add the official file.

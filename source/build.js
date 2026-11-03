@@ -11,9 +11,6 @@ const fs = require("fs");
 const path = require("path");
 const pptxgen = require("pptxgenjs");
 const sharp = require("sharp");
-const React = require("react");
-const ReactDOMServer = require("react-dom/server");
-const fa = require("react-icons/fa6");
 const JSZip = require(require.resolve("jszip", { paths: [require.resolve("pptxgenjs")] }));
 const { applyTheme } = require("./lib/apply_theme.js");
 
@@ -88,12 +85,6 @@ const W = 13.333, H = 7.5, M = 0.6;
 const bar = (s) => [...s].map((ch) => ch + "̅").join(""); // overline over a whole expression
 const ZB = "z̅"; // z-bar
 const MINUS = "−";
-
-async function iconPng(Icon, color = "#7357FF", size = 256) {
-  const svg = ReactDOMServer.renderToStaticMarkup(React.createElement(Icon, { color, size: String(size) }));
-  const buf = await sharp(Buffer.from(svg)).png().toBuffer();
-  return "image/png;base64," + buf.toString("base64");
-}
 
 function line(slide, x1, y1, x2, y2, opt = {}) {
   const o = {
@@ -173,6 +164,25 @@ function contentSlide(title, section, dark = false) {
   return slide;
 }
 
+// Real PowerPoint bullet list. items: strings or [boldHead, rest].
+function bullets(slide, items, o) {
+  const runs = [];
+  items.forEach((it, i) => {
+    const last = i === items.length - 1;
+    const opts = { bullet: { indent: 18 }, breakLine: !last };
+    if (Array.isArray(it)) {
+      runs.push({ text: it[0], options: { bullet: { indent: 18 }, bold: true } });
+      runs.push({ text: it[1], options: { bullet: { indent: 18 }, breakLine: !last } });
+    } else runs.push({ text: it, options: opts });
+  });
+  text(slide, runs, Object.assign({ paraSpaceAfter: 8 }, o));
+}
+
+// Harvard in-text citation at the bottom-left of a slide.
+function source(slide, cite, dark = false) {
+  text(slide, "Source: " + cite, { x: M, y: 7.0, w: 6.4, h: 0.3, fontSize: 10, color: dark ? C.soft : C.muted, objectName: "Source citation" });
+}
+
 function notes(slide, body) {
   const n = slideCount;
   let t = "Presenter: " + presenter(n) + "\n\n" + body;
@@ -248,19 +258,9 @@ async function build() {
   const bgDark = await svgToData(darkBgSvg("plain"));
   const bgCover = await svgToData(darkBgSvg("cover"));
   const signal = await svgToData(signalSvg());
-  const ic = {
-    bolt: await iconPng(fa.FaBolt), wave: await iconPng(fa.FaWaveSquare),
-    tower: await iconPng(fa.FaTowerBroadcast), sound: await iconPng(fa.FaVolumeHigh),
-  };
   const hasLogo = fs.existsSync(LOGO);
 
   // ------------------------------------------------ layouts
-  const footer = (dark) => ({
-    text: {
-      text: "Complex Numbers  |  IT Department, Salahaddin University-Erbil",
-      options: { x: M, y: 7.0, w: 6, h: 0.3, fontSize: 10, color: dark ? C.soft : C.muted, margin: 0 },
-    },
-  });
   const titlePh = (dark) => ({
     placeholder: {
       options: { name: "title", type: "title", x: M, y: 0.5, w: W - 2 * M, h: 0.9, fontFace: HEAD, fontSize: 32, bold: true, color: dark ? C.white : C.text, margin: 0, valign: "middle", align: "left" },
@@ -270,13 +270,13 @@ async function build() {
   pres.defineSlideMaster({
     title: "CONTENT",
     background: { color: C.white },
-    objects: [titlePh(false), footer(false)],
+    objects: [titlePh(false)],
     slideNumber: { x: W - M - 0.4, y: 7.0, w: 0.4, h: 0.3, fontSize: 10, color: C.muted, align: "right" },
   });
   pres.defineSlideMaster({
     title: "CONTENT_DARK",
     background: { data: bgDark },
-    objects: [titlePh(true), footer(true)],
+    objects: [titlePh(true)],
     slideNumber: { x: W - M - 0.4, y: 7.0, w: 0.4, h: 0.3, fontSize: 10, color: C.soft, align: "right" },
   });
   pres.defineSlideMaster({
@@ -335,14 +335,18 @@ async function build() {
     text(s, "?", { x: M + 0.3, y: 1.85, w: 0.6, h: 1.3, fontFace: HEAD, fontSize: 54, bold: true, color: C.purple, valign: "middle" });
     text(s, "Can we find the square root of a negative number?", { x: M + 1.1, y: 1.85, w: 5.8, h: 1.3, fontFace: HEAD, fontSize: 21, bold: true, color: C.white, valign: "middle" });
 
-    text(s, "With real numbers, no.", { x: M, y: 3.5, w: 7, h: 0.4, fontSize: 18, bold: true, color: C.white });
-    text(s, "The square of a real number is never negative:", { x: M, y: 3.9, w: 7, h: 0.35, fontSize: 16, color: C.pale });
+    text(s, "With real numbers, no.", { x: M, y: 3.45, w: 7, h: 0.4, fontSize: 18, bold: true, color: C.white });
     ["2² = 4", "(" + MINUS + "2)² = 4", "0² = 0"].forEach((eq, i) => {
       const x = M + i * 2.4;
-      box(s, x, 4.45, 2.2, 0.9, { fill: C.deep, name: "Square example" });
-      math(s, eq, { x, y: 4.45, w: 2.2, h: 0.9, fontSize: 22, color: C.white, align: "center", valign: "middle" });
+      box(s, x, 3.95, 2.2, 0.85, { fill: C.deep, name: "Square example" });
+      math(s, eq, { x, y: 3.95, w: 2.2, h: 0.85, fontSize: 22, color: C.white, align: "center", valign: "middle" });
     });
-    text(s, "So the equation x² = " + MINUS + "1 has no real solution.", { x: M, y: 5.65, w: 7.1, h: 0.4, fontSize: 16, color: C.pale });
+    bullets(s, [
+      "The square of a real number is never negative.",
+      "So the equation x² = " + MINUS + "1 has no real solution.",
+      "We need a new kind of number to solve it.",
+    ], { x: M, y: 5.0, w: 7.1, h: 1.5, fontSize: 16, color: C.pale });
+    source(s, "Abramson (2021a)", true);
 
     box(s, 8.35, 1.85, 4.38, 4.6, { fill: C.purple, name: "Imaginary unit box" });
     text(s, "The imaginary unit", { x: 8.75, y: 2.15, w: 3.6, h: 0.4, fontSize: 17, bold: true, color: C.white });
@@ -381,7 +385,12 @@ async function build() {
     label(centers.a - 0.05, 4.3, "a: real part", 1.6);
     label(centers.b + 0.15, 4.3, "b: imaginary part", 1.9);
     label(centers.i - 0.7, 2.12, "i: imaginary unit (i² = " + MINUS + "1)", 3.0);
-    text(s, "In other words, a complex number is a real number plus an imaginary number.", { x: M, y: 5.4, w: 7.2, h: 0.7, fontSize: 16, color: C.text });
+    bullets(s, [
+      "A complex number is a real number plus an imaginary number.",
+      "a and b are real numbers.",
+      "If b = 0, then z is just a real number.",
+    ], { x: M, y: 5.3, w: 7.2, h: 1.4, fontSize: 16 });
+    source(s, "Abramson (2021a); Stewart, Redlin and Watson (2016)");
 
     text(s, "Examples", { x: 8.35, y: 1.85, w: 4.3, h: 0.35, fontSize: 16, bold: true, color: C.text });
     [["3", "+", "4"], ["2", MINUS, "5"]].forEach(([a, sgn, b], i) => {
@@ -416,10 +425,11 @@ async function build() {
       });
     });
     text(s, "Be careful", { x: M, y: 5.25, w: 4, h: 0.4, fontSize: 17, bold: true, color: C.purple });
-    text(s, [
-      { text: "The imaginary part is only the number in front of i, without the i. For z = 5 + 2i it is 2, not 2i.", options: { breakLine: true } },
-      { text: "Each part keeps its own sign, so for z = " + MINUS + "3 + 7i the real part is " + MINUS + "3." },
-    ], { x: M, y: 5.65, w: 12, h: 0.95, fontSize: 16, color: C.text, paraSpaceAfter: 6 });
+    bullets(s, [
+      "The imaginary part is only the number in front of i, without the i. For z = 5 + 2i it is 2, not 2i.",
+      "Each part keeps its own sign, so for z = " + MINUS + "3 + 7i the real part is " + MINUS + "3.",
+    ], { x: M, y: 5.65, w: 12, h: 0.95, fontSize: 16 });
+    source(s, "Abramson (2021a)");
     notes(s,
       "Let's practise with two examples. In 5 plus 2i, the real part is 5 and the imaginary part is 2. In minus 3 plus 7i, the real part is minus 3 and the imaginary part is 7.\n\n" +
       "One common mistake: people write the imaginary part as 2i. It's just 2, the number in front of i. And each part keeps its own sign."
@@ -437,15 +447,12 @@ async function build() {
     math(s, "(3, 4)", { x: g.px(3) + 0.2, y: g.py(4) - 0.08, w: 1.2, h: 0.35, fontSize: 15, color: C.text });
 
     text(s, "Also called the Argand plane.", { x: 7.6, y: 1.9, w: 5.1, h: 0.4, fontSize: 16, color: C.muted });
-    [
-      ["Horizontal axis: real axis", "Shows the real part a."],
-      ["Vertical axis: imaginary axis", "Shows the imaginary part b."],
-      ["Every complex number is a point", "a + bi is drawn at the point (a, b)."],
-    ].forEach(([h, d], i) => {
-      const y = 2.5 + i * 1.0;
-      text(s, h, { x: 7.6, y, w: 5.1, h: 0.4, fontSize: 17, bold: true, color: C.text });
-      text(s, d, { x: 7.6, y: y + 0.4, w: 5.1, h: 0.4, fontSize: 15, color: C.muted });
-    });
+    bullets(s, [
+      "Horizontal axis: the real axis, shows a.",
+      "Vertical axis: the imaginary axis, shows b.",
+      "Each complex number is a point: a + bi is drawn at (a, b).",
+    ], { x: 7.6, y: 2.45, w: 5.1, h: 2.9, fontSize: 17, paraSpaceAfter: 14 });
+    source(s, "Abramson (2021b)");
     box(s, 7.6, 5.65, 5.13, 0.75, { fill: C.lavender, name: "How to plot" });
     text(s, "To plot 3 + 4i: go 3 to the right, then 4 up.", { x: 7.85, y: 5.65, w: 4.8, h: 0.75, fontSize: 16, bold: true, color: C.purple, valign: "middle" });
     notes(s,
@@ -464,9 +471,12 @@ async function build() {
     math(s, [{ text: "then  " + ZB + " = a " }, { text: MINUS, options: { color: C.purple, bold: true } }, { text: " bi" }], { x: M + 0.35, y: 3.15, w: 6.6, h: 0.7, fontSize: 34, italic: true, valign: "middle", color: C.text });
     text(s, ZB + " is read \"z bar\".", { x: M + 0.35, y: 3.88, w: 6.6, h: 0.32, fontSize: 13, color: C.muted, fontFace: MATH });
 
-    text(s, "How to remember it", { x: M, y: 4.7, w: 6.5, h: 0.35, fontSize: 15, color: C.muted });
-    text(s, [{ text: "Keep the real part.", options: { breakLine: true } }, { text: "Change the sign of the imaginary part." }], { x: M, y: 5.05, w: 7.2, h: 0.8, fontSize: 19, bold: true, color: C.text });
-    text(s, "Nothing else changes.", { x: M, y: 5.95, w: 6.3, h: 0.35, fontSize: 15, color: C.muted });
+    text(s, "How to remember it", { x: M, y: 4.6, w: 6.5, h: 0.35, fontSize: 16, bold: true, color: C.purple });
+    bullets(s, [
+      "Keep the real part.",
+      "Change the sign of the imaginary part.",
+      "Nothing else changes.",
+    ], { x: M, y: 5.0, w: 7.2, h: 1.5, fontSize: 18 });
 
     box(s, 8.35, 1.85, 4.38, 4.6, { name: "Example" });
     text(s, "Example", { x: 8.65, y: 2.05, w: 3.6, h: 0.35, fontSize: 15, bold: true, color: C.purple });
@@ -474,6 +484,7 @@ async function build() {
     s.addShape(pres.shapes.DOWN_ARROW, { x: 10.29, y: 3.55, w: 0.5, h: 0.6, fill: { color: C.pale }, line: { color: C.pale, width: 0 }, objectName: "Arrow" });
     math(s, [{ text: ZB + " = 3 " }, { text: MINUS, options: { color: C.purple, bold: true } }, { text: " 4i" }], { x: 8.35, y: 4.3, w: 4.38, h: 0.8, fontSize: 38, italic: true, align: "center", valign: "middle", color: C.text });
     text(s, "The 3 stays. Only the sign of 4i changes.", { x: 8.6, y: 5.3, w: 3.9, h: 0.7, fontSize: 14, color: C.muted, align: "center" });
+    source(s, "Abramson (2021a); Brown and Churchill (2014)");
     notes(s,
       "Now the first main idea, the conjugate. If z is a plus b i, then the conjugate, which we write as z with a bar and read as z bar, is a minus b i.\n\n" +
       "So we keep the real part and change the sign of the imaginary part. Nothing else changes. For example, 3 plus 4i becomes 3 minus 4i."
@@ -492,18 +503,14 @@ async function build() {
     math(s, "z = 3 + 4i", { x: g.px(3) + 0.2, y: g.py(4) - 0.2, w: 2.2, h: 0.4, fontSize: 18, bold: true, italic: true, color: C.purple, valign: "middle" });
     math(s, ZB + " = 3 " + MINUS + " 4i", { x: g.px(3) + 0.2, y: g.py(-4) - 0.2, w: 2.2, h: 0.4, fontSize: 18, bold: true, italic: true, color: C.text, valign: "middle" });
 
-    text(s, [
-      { text: "Same real part.", options: { bold: true, breakLine: true } },
-      { text: "Both points are 3 units to the right.", options: { color: C.muted, breakLine: true } },
-      { text: " ", options: { fontSize: 8, breakLine: true } },
-      { text: "Opposite imaginary part.", options: { bold: true, breakLine: true } },
-      { text: "4 units up becomes 4 units down.", options: { color: C.muted, breakLine: true } },
-      { text: " ", options: { fontSize: 8, breakLine: true } },
-      { text: "The real axis acts like a mirror.", options: { bold: true, breakLine: true } },
-      { text: "The conjugate is the reflection of z across the real axis.", options: { color: C.muted } },
-    ], { x: 8.3, y: 2.0, w: 4.45, h: 3.6, fontSize: 17, color: C.text });
+    bullets(s, [
+      "Same real part: both points are 3 units to the right.",
+      "Opposite imaginary part: 4 units up becomes 4 units down.",
+      "The real axis is a mirror: the conjugate is the reflection of z across it.",
+    ], { x: 8.3, y: 2.0, w: 4.45, h: 3.6, fontSize: 17, paraSpaceAfter: 14 });
     box(s, 8.3, 5.85, 4.43, 0.75, { fill: C.lavender, name: "Note" });
     text(s, "If you fold the graph along the real axis, z lands on " + ZB + ".", { x: 8.5, y: 5.85, w: 4.1, h: 0.75, fontSize: 15, color: C.purple, valign: "middle" });
+    source(s, "Brown and Churchill (2014)");
     notes(s,
       "Thank you. Here is the conjugate on the graph. The point 3 plus 4i is four units above the real axis, and its conjugate 3 minus 4i is four units below it.\n\n" +
       "The real part is the same, only the side changes. So the conjugate is a reflection across the real axis, like looking in a mirror. If you fold the paper along the real axis, the two points meet."
@@ -541,6 +548,7 @@ async function build() {
       text(s, "Example:", { x: x + 0.3, y: y + 2.8, w: 2, h: 0.3, fontSize: 13, bold: true, color: C.muted });
       math(s, p.ex.map((t, k) => ({ text: t, options: { breakLine: k < p.ex.length - 1, color: k === 2 ? C.purple : C.text } })), { x: x + 0.3, y: y + 3.15, w: cw - 0.5, h: 1.4, fontSize: 15, paraSpaceAfter: 5 });
     });
+    source(s, "Brown and Churchill (2014)");
     notes(s,
       "The conjugate follows three simple rules. We won't prove them, we'll just check them with numbers.\n\n" +
       "First, if you take the conjugate twice, you get z back. 2 plus 3i goes to 2 minus 3i and then back to 2 plus 3i.\n\n" +
@@ -568,6 +576,7 @@ async function build() {
       math(s, [{ text: ZB + " = " + e.zb[0] }, { text: e.zb[1], options: { color: C.purple, bold: true } }, { text: e.zb[2] }], { x: x + 0.3, y: y + 2.2, w: cw - 0.6, h: 0.95, fontSize: 34, italic: true, align: "center", valign: "middle", color: C.text });
       text(s, e.note, { x: x + 0.35, y: y + 3.35, w: cw - 0.7, h: 1.05, fontSize: 15, color: C.text });
     });
+    source(s, "Abramson (2021a)");
     notes(s,
       "Hello, I'm " + presenter(9) + ". Here are three quick examples.\n\n" +
       "6 plus 2i becomes 6 minus 2i.\n\n" +
@@ -596,7 +605,11 @@ async function build() {
     box(s, M, 4.1, 7.2, 1.5, { fill: C.lavender, name: "Formula" });
     math(s, "If  z = a + bi,", { x: M + 0.35, y: 4.1, w: 2.6, h: 1.5, fontSize: 20, italic: true, color: C.text, valign: "middle" });
     math(s, "|z| = √(a² + b²)", { x: M + 2.75, y: 4.1, w: 4.3, h: 1.5, fontSize: 40, bold: true, italic: true, color: C.purple, valign: "middle", align: "center" });
-    text(s, "It is also called the modulus of z. We read |z| as \"the absolute value of z\".", { x: M, y: 5.8, w: 7.2, h: 0.7, fontSize: 15, color: C.text });
+    bullets(s, [
+      "|z| is also called the modulus of z.",
+      "It is always a real number, zero or positive.",
+    ], { x: M, y: 5.8, w: 7.2, h: 0.85, fontSize: 15 });
+    source(s, "Abramson (2021b); Stewart, Redlin and Watson (2016)");
 
     box(s, 8.35, 1.85, 4.38, 4.75, { name: "Pythagoras" });
     text(s, "Where does the formula come from?", { x: 8.65, y: 2.05, w: 3.9, h: 0.4, fontSize: 15, bold: true, color: C.text });
@@ -644,6 +657,7 @@ async function build() {
       { text: "     = √(9 + 16) = √25", options: { breakLine: true } },
       { text: "     = 5", options: { bold: true, color: C.purple } },
     ], { x: 8.5, y: 4.5, w: 4.1, h: 2.0, fontSize: 24, italic: true, color: C.text, valign: "middle", paraSpaceAfter: 4 });
+    source(s, "Abramson (2021b)");
     notes(s,
       "Thank you. Let's look at 3 plus 4i on the graph. We go 3 to the right and 4 up. Together with the line from the origin, this makes a right triangle.\n\n" +
       "The purple line is the distance we want. 3 squared plus 4 squared is 9 plus 16, which is 25, and the square root of 25 is 5. So this point is 5 units away from the origin."
@@ -671,6 +685,7 @@ async function build() {
         if (labels[k]) text(s, labels[k], { x: x + 3.9, y: yy, w: 1.85, h: 0.66, fontSize: 13, color: C.muted, valign: "middle" });
       });
     });
+    source(s, "Abramson (2021b)");
     notes(s,
       "Here are two worked examples.\n\n" +
       "For 3 plus 4i: 3 squared is 9, 4 squared is 16, the sum is 25, and the square root is 5.\n\n" +
@@ -696,6 +711,7 @@ async function build() {
       text(s, words, { x: x + 0.35, y: y + 0.92, w: cw - 0.6, h: 0.45, fontSize: 16, color: C.text });
       math(s, [{ text: "Example:  ", options: { color: C.muted } }, { text: ex, options: { color: C.text } }], { x: x + 0.35, y: y + 1.5, w: cw - 0.6, h: 0.45, fontSize: 15, valign: "middle" });
     });
+    source(s, "Brown and Churchill (2014)");
     notes(s,
       "Hi, I'm " + presenter(13) + ". The absolute value has four basic properties, and they all make sense if you remember it's a distance.\n\n" +
       "One, it's never negative. Two, it's zero only when z itself is zero. Three, the conjugate has the same absolute value, because a reflection is the same distance from the origin. 3 minus 4i also gives 5.\n\n" +
@@ -732,6 +748,7 @@ async function build() {
       math(s, r, { x: 8.1, y, w: 3.0, h: 0.55, fontSize: 20, italic: k < 4, bold: k === 4, color: k === 4 ? C.white : C.pale, valign: "middle" });
       text(s, why, { x: 11.1, y, w: 1.55, h: 0.55, fontSize: 12, color: C.soft, valign: "middle" });
     });
+    source(s, "Brown and Churchill (2014); Stewart, Redlin and Watson (2016)", true);
     math(s, "and  |z|² = 5² = 25.  Same result.", { x: 7.1, y: 5.85, w: 5.4, h: 0.55, fontSize: 19, bold: true, color: C.white, valign: "middle" });
     notes(s,
       "This is where the two ideas meet: z times z bar equals the absolute value of z, squared.\n\n" +
@@ -766,6 +783,7 @@ async function build() {
         (isMath ? math : text)(s, r[i + 1], { x: x + 0.3, y, w: colW - 0.6, h: rh, fontSize: isMath ? 21 : 15, italic: isMath, bold: j === 4, color: j === 4 ? C.purple : C.text, valign: "middle" });
       });
     });
+    source(s, "Abramson (2021a; 2021b)");
     notes(s,
       "Thank you. Here are the two ideas side by side, because they are easy to mix up.\n\n" +
       "The conjugate changes a sign and gives another complex number. The absolute value gives the size, a real number that is zero or positive. On the graph, the conjugate is a reflection and the absolute value is a distance.\n\n" +
@@ -777,17 +795,12 @@ async function build() {
   pres.addSection({ title: "Applications and Review" });
   {
     const s = contentSlide("Real-Life Applications", "Applications and Review");
-    [
-      [ic.bolt, "Electrical engineering", "AC voltage and current are written as complex numbers."],
-      [ic.wave, "Digital signal processing", "Audio and image filters work with complex values."],
-      [ic.tower, "Communication systems", "Wi-Fi and mobile signals carry data in magnitude and phase."],
-      [ic.sound, "Sound analysis", "Each frequency in a sound has a size and a timing."],
-    ].forEach(([icon, h, d], i) => {
-      const y = 1.9 + i * 1.07;
-      s.addImage({ data: icon, x: M + 0.05, y: y + 0.08, w: 0.4, h: 0.4, objectName: h + " icon", altText: h });
-      text(s, h, { x: M + 0.7, y, w: 5.0, h: 0.4, fontSize: 16, bold: true, color: C.text, valign: "middle" });
-      text(s, d, { x: M + 0.7, y: y + 0.4, w: 5.0, h: 0.45, fontSize: 14, color: C.muted, valign: "top" });
-    });
+    bullets(s, [
+      "Electrical engineering: AC voltage and current are written as complex numbers.",
+      "Digital signal processing: audio and image filters work with complex values.",
+      "Communication systems: Wi-Fi and mobile signals carry data in magnitude and phase.",
+      "Sound analysis: each frequency in a sound has a size and a timing.",
+    ], { x: M, y: 1.9, w: 5.7, h: 4.2, fontSize: 16, paraSpaceAfter: 14 });
     box(s, 6.6, 1.85, 6.13, 4.3, { name: "Signal illustration frame" });
     s.addImage({ data: signal, x: 6.85, y: 2.0, w: 5.63, h: 3.07, objectName: "Electrical signal illustration", altText: "A rotating arrow whose length is the magnitude and whose angle is the phase, drawing a sine wave" });
     text(s, [
@@ -795,6 +808,7 @@ async function build() {
       { text: "Angle of the arrow = phase" },
     ], { x: 6.9, y: 5.2, w: 5.6, h: 0.75, fontSize: 14, color: C.text, valign: "middle" });
     text(s, "So one complex number can store two facts about a signal: its size and its timing.", { x: M, y: 6.35, w: W - 2 * M, h: 0.4, fontSize: 16, color: C.text });
+    source(s, "Alexander and Sadiku (2017); Stroud and Booth (2020)");
     notes(s,
       "So where do we actually use this? In electrical engineering, AC current and voltage are written with complex numbers. They're also used in signal processing, in communication systems like Wi-Fi and mobile networks, and in sound analysis.\n\n" +
       "The picture shows the basic idea. Imagine an arrow that keeps rotating. Its length is the magnitude, which is the absolute value we just learned, and its angle is the phase. As it rotates, it draws a wave. So one complex number holds two pieces of information at once."
@@ -821,6 +835,7 @@ async function build() {
       line(s, x + 0.3, y + 1.95, x + 3.2, y + 1.95, { color: C.gray, width: 1.5, name: "Answer line" });
       const nm = "Answer " + (i + 1);
       answerNames.push(nm);
+      if (i === 0) source(s, "Questions written by the group, based on Abramson (2021a; 2021b)");
       s.addText(a, { isTextBox: true, shape: pres.shapes.ROUNDED_RECTANGLE, rectRadius: 0.05, x: x + 0.3, y: y + 1.45, w: 2.9, h: 0.5, fill: { color: C.lavender }, line: { color: C.lavender, width: 0 }, fontFace: MATH, fontSize: 20, bold: true, italic: true, color: C.purple, align: "center", valign: "middle", margin: 0, objectName: nm });
     });
     notes(s,
@@ -832,30 +847,36 @@ async function build() {
     );
   }
 
-  // ================================================= SLIDE 18 — Conclusion
+  // ================================================= SLIDE 18 — Conclusion and Harvard references
   {
     const s = contentSlide("Conclusion", "Applications and Review", true);
-    text(s, [
-      { text: "A complex number has a real and an imaginary part: z = a + bi.", options: { bullet: true, breakLine: true } },
-      { text: "The conjugate changes the sign of the imaginary part: " + ZB + " = a " + MINUS + " bi.", options: { bullet: true, breakLine: true } },
-      { text: "The absolute value is the distance from the origin: |z| = √(a² + b²).", options: { bullet: true, breakLine: true } },
-      { text: "The identity z" + ZB + " = |z|² connects the two ideas.", options: { bullet: true, breakLine: true } },
-      { text: "Complex numbers are used in mathematics, IT and engineering.", options: { bullet: true } },
-    ], { x: M, y: 1.75, w: 7.4, h: 3.1, fontSize: 16, color: C.white, paraSpaceAfter: 10 });
-    text(s, "Thank you", { x: 8.45, y: 1.9, w: 4.3, h: 1.1, fontFace: HEAD, fontSize: 48, bold: true, color: C.white, align: "right", valign: "middle" });
-    text(s, "Any questions?", { x: 8.45, y: 3.0, w: 4.3, h: 0.4, fontSize: 18, color: C.pale, align: "right" });
+    bullets(s, [
+      "A complex number has a real and an imaginary part: z = a + bi.",
+      "The conjugate changes the sign of the imaginary part: " + ZB + " = a " + MINUS + " bi.",
+      "The absolute value is the distance from the origin: |z| = √(a² + b²).",
+      "The identity z" + ZB + " = |z|² connects the two ideas.",
+      "Complex numbers are used in mathematics, IT and engineering.",
+    ], { x: M, y: 1.55, w: 7.6, h: 2.6, fontSize: 15, color: C.white, paraSpaceAfter: 6 });
+    text(s, "Thank you", { x: 8.45, y: 1.6, w: 4.3, h: 1.0, fontFace: HEAD, fontSize: 44, bold: true, color: C.white, align: "right", valign: "middle" });
+    text(s, "Any questions?", { x: 8.45, y: 2.6, w: 4.3, h: 0.4, fontSize: 18, color: C.pale, align: "right" });
 
-    line(s, M, 5.05, W - M, 5.05, { color: C.deep, width: 1, name: "Divider" });
-    text(s, "References", { x: M, y: 5.15, w: 3, h: 0.3, fontSize: 12, bold: true, color: C.soft });
-    text(s, [
-      { text: "Abramson, J. (2015). Algebra and Trigonometry, Section 3.1: Complex Numbers. OpenStax, Rice University.", options: { breakLine: true } },
-      { text: "Stewart, J., Redlin, L., & Watson, S. (2016). Precalculus: Mathematics for Calculus (7th ed.). Cengage Learning.", options: { breakLine: true } },
-      { text: "Brown, J. W., & Churchill, R. V. (2014). Complex Variables and Applications (9th ed.). McGraw-Hill Education.", options: { breakLine: true } },
-      { text: "Stroud, K. A., & Booth, D. J. (2020). Engineering Mathematics (8th ed.). Red Globe Press." },
-    ], { x: M, y: 5.5, w: W - 2 * M, h: 1.3, fontSize: 11, color: C.pale, paraSpaceAfter: 3 });
+    line(s, M, 4.3, W - M, 4.3, { color: C.deep, width: 1, name: "Divider" });
+    text(s, "References (Harvard style)", { x: M, y: 4.38, w: 5, h: 0.3, fontSize: 12, bold: true, color: C.soft });
+    const ACC = "(Accessed: 3 November 2026).";
+    const refs = [
+      [["Abramson, J. (2021a) 'Section 3.1: Complex numbers', in ", 0], ["Precalculus 2e", 1], [". Houston, TX: OpenStax. Available at: https://openstax.org/books/precalculus-2e/pages/3-1-complex-numbers " + ACC, 0]],
+      [["Abramson, J. (2021b) 'Section 8.5: Polar form of complex numbers', in ", 0], ["Precalculus 2e", 1], [". Houston, TX: OpenStax. Available at: https://openstax.org/books/precalculus-2e/pages/8-5-polar-form-of-complex-numbers " + ACC, 0]],
+      [["Alexander, C.K. and Sadiku, M.N.O. (2017) ", 0], ["Fundamentals of electric circuits", 1], [". 6th edn. New York: McGraw-Hill Education.", 0]],
+      [["Brown, J.W. and Churchill, R.V. (2014) ", 0], ["Complex variables and applications", 1], [". 9th edn. New York: McGraw-Hill Education.", 0]],
+      [["Stewart, J., Redlin, L. and Watson, S. (2016) ", 0], ["Precalculus: mathematics for calculus", 1], [". 7th edn. Boston, MA: Cengage Learning.", 0]],
+      [["Stroud, K.A. and Booth, D.J. (2020) ", 0], ["Engineering mathematics", 1], [". 8th edn. London: Red Globe Press.", 0]],
+    ];
+    const runs = [];
+    refs.forEach((r, i) => r.forEach(([t, it], k) => runs.push({ text: t, options: { italic: !!it, breakLine: k === r.length - 1 && i < refs.length - 1 } })));
+    text(s, runs, { x: M, y: 4.72, w: W - 2 * M, h: 2.2, fontSize: 10.5, color: C.pale, paraSpaceAfter: 3 });
     notes(s,
       "To sum up. A complex number has a real part and an imaginary part. The conjugate changes the sign of the imaginary part. The absolute value is the distance from the origin. And z times z bar equals the absolute value squared, which connects the two ideas. These ideas are used a lot in IT and engineering.\n\n" +
-      "Our references are on the slide. Thank you for listening. We're happy to answer any questions."
+      "Our references are listed in Harvard style at the bottom. Thank you for listening. We're happy to answer any questions."
     );
   }
 

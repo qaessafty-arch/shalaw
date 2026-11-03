@@ -186,4 +186,4 @@ Presenter: [STUDENT 9]
 
 To sum up. A complex number has a real part and an imaginary part. The conjugate changes the sign of the imaginary part. The absolute value is the distance from the origin. And z times z bar equals the absolute value squared, which connects the two ideas. These ideas are used a lot in IT and engineering.
 
-Our references are on the slide. Thank you for listening. We're happy to answer any questions.
+Our references are listed in Harvard style at the bottom. Thank you for listening. We're happy to answer any questions.

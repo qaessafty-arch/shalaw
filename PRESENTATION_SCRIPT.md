@@ -135,7 +135,7 @@ To sum up:
 - z · z̄ = |z|² connects the two ideas.
 - These ideas are used a lot in IT and engineering.
 
-Our references are on the slide. Thank you for listening, and we're happy to answer any questions.
+Our references are listed on the slide in Harvard style. Thank you for listening, and we're happy to answer any questions.
 
 ---
 

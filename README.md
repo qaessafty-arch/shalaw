@@ -14,6 +14,7 @@ An 18-slide group presentation for first-year students. It is split between **9 
 | `Complex_Numbers_Conjugate_and_Absolute_Value.pdf` | PDF version. The quiz answers are shown, because a PDF cannot animate. |
 | `SPEAKER_NOTES.md` | Speaker notes for all 18 slides. These are the same notes that are inside the .pptx. |
 | `PRESENTATION_SCRIPT.md` | The script split by presenter (Student 1 to Student 9), with the hand-over line between speakers. |
+| `REFERENCES.md` | Harvard reference list, plus which source supports which slide. |
 | `MATH_ACCURACY_CHECKLIST.md` | Each formula, example and quiz answer, checked. |
 | `source/` | The generator script (`build.js`). Rebuild the deck from here after you change names or the logo. |
 
